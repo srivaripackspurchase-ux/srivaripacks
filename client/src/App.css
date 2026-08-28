@@ -1,0 +1,70 @@
+/* Sidebar Responsive & Collapsible Layout */
+.main-layout-container {
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
+  width: 100%;
+}
+
+.main-layout-container.sidebar-open {
+  margin-left: 260px;
+}
+
+.sidebar {
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+@media (max-width: 992px) {
+  .main-layout-container.sidebar-open {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Animations */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Button & Card Micro-interactions */
+.sidebar-link:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary) !important;
+  padding-left: 20px !important;
+}
+
+.custom-table tr {
+  transition: background-color var(--transition-fast);
+}
+
+.custom-table tr:hover {
+  background-color: var(--bg-tertiary) !important;
+}
+
+.delete-row-btn:hover {
+  color: #f87171 !important;
+  background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Landing Drawer Menu backdrop */
+.drawer-menu {
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
+}
