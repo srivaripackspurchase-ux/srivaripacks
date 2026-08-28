@@ -1273,12 +1273,12 @@ export default function Customers() {
       doc.save(pdfFileName);
       showToast(`Quotation downloaded as ${pdfFileName}`, 'success');
 
-      // 2. Asynchronous Background Storage to Supabase (Non-blocking event loop execution)
+      // 2. Asynchronous Background Storage to Supabase & Quotations Module
       setTimeout(() => {
         (async () => {
           try {
             const dataUrl = doc.output('datauristring');
-            const pdfBase64 = dataUrl.split(',')[1];
+            const pdfBase64 = dataUrl && dataUrl.includes(',') ? dataUrl.split(',')[1] : null;
             const finalNo = quotationHeader.quotationNo || `SVP/Q-${new Date().getFullYear()}/${String(Date.now()).slice(-5)}`;
 
             const res = await authenticatedFetch('/api/quotations', {
@@ -1293,14 +1293,16 @@ export default function Customers() {
               })
             });
 
-            const data = await res.json();
+            const data = await res.json().catch(() => ({ message: `Server error (HTTP ${res.status})` }));
             if (res.ok) {
               showToast(`Quotation ${finalNo} saved to Quotations module.`, 'info');
             } else {
               console.warn('Quotations storage notice:', data.message);
+              showToast(`Quotation save note: ${data.message || 'Could not save to cloud.'}`, 'error');
             }
           } catch (stgErr) {
             console.error('Quotations upload error:', stgErr);
+            showToast('Network error while saving quotation to module.', 'error');
           }
         })();
       }, 0);

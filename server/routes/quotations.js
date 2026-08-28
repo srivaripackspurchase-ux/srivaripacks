@@ -42,41 +42,45 @@ router.post('/', auth, asyncHandler(async (req, res) => {
 
   const { company_name, file_id, quotation_number, pdf_file_name, pdf_base64 } = req.body;
 
-  if (!company_name || !pdf_file_name || !pdf_base64) {
-    return res.status(400).json({ message: 'company_name, pdf_file_name, and pdf_base64 are required.' });
+  if (!company_name || !pdf_file_name) {
+    return res.status(400).json({ message: 'company_name and pdf_file_name are required.' });
   }
 
   const cleanFileName = pdf_file_name.endsWith('.pdf') ? pdf_file_name : `${pdf_file_name}.pdf`;
   const storagePath = `quotations/${userId}/${cleanFileName}`;
-  const pdfBuffer = Buffer.from(pdf_base64, 'base64');
+  const pdfBuffer = pdf_base64 ? Buffer.from(pdf_base64, 'base64') : null;
 
-  // 1. Always save a copy to local server disk (100% fail-safe backup)
-  try {
-    const userLocalDir = path.join(UPLOADS_DIR, String(userId));
-    if (!fs.existsSync(userLocalDir)) {
-      fs.mkdirSync(userLocalDir, { recursive: true });
+  // 1. Always save a copy to local server disk if buffer exists (100% fail-safe backup)
+  if (pdfBuffer) {
+    try {
+      const userLocalDir = path.join(UPLOADS_DIR, String(userId));
+      if (!fs.existsSync(userLocalDir)) {
+        fs.mkdirSync(userLocalDir, { recursive: true });
+      }
+      fs.writeFileSync(path.join(userLocalDir, cleanFileName), pdfBuffer);
+    } catch (fsErr) {
+      console.warn('Local disk write notice:', fsErr.message);
     }
-    fs.writeFileSync(path.join(userLocalDir, cleanFileName), pdfBuffer);
-  } catch (fsErr) {
-    console.warn('Local disk write notice:', fsErr.message);
   }
 
   if (isSupabaseConfigured()) {
-    try {
-      // 2. Try uploading to Supabase Storage bucket 'quotations'
-      const { error: uploadError } = await supabase
-        .storage
-        .from('quotations')
-        .upload(storagePath, pdfBuffer, {
-          contentType: 'application/pdf',
-          upsert: true
-        });
+    if (pdfBuffer) {
+      try {
+        // 2. Try uploading to Supabase Storage bucket 'quotations'
+        const { error: uploadError } = await supabase
+          .storage
+          .from('quotations')
+          .upload(storagePath, pdfBuffer, {
+            contentType: 'application/pdf',
+            upsert: true
+          });
 
-      if (uploadError) {
-        console.warn('Supabase storage upload notice:', uploadError.message);
+        if (uploadError) {
+          console.warn('Supabase storage upload notice:', uploadError.message);
+        }
+      } catch (stgErr) {
+        console.warn('Storage upload error caught:', stgErr.message);
       }
-    } catch (stgErr) {
-      console.warn('Storage upload error caught:', stgErr.message);
     }
 
     // 3. Insert record into Supabase 'quotations' table (Include base64 as instant fail-safe for serverless)
