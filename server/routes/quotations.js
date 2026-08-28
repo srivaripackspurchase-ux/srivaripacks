@@ -79,21 +79,37 @@ router.post('/', auth, asyncHandler(async (req, res) => {
       console.warn('Storage upload error caught:', stgErr.message);
     }
 
-    // 3. Insert record into Supabase 'quotations' table (Lean payload for instant DB write)
+    // 3. Insert record into Supabase 'quotations' table (Include base64 as instant fail-safe for serverless)
     const recordPayload = {
       user_id: userId,
       file_id: file_id || null,
       quotation_number: quotation_number || null,
       company_name: String(company_name).trim(),
       pdf_file_name: cleanFileName,
-      storage_path: storagePath
+      storage_path: storagePath,
+      pdf_base64: pdf_base64
     };
 
-    const { data: newQuotation, error: dbError } = await supabase
+    let { data: newQuotation, error: dbError } = await supabase
       .from('quotations')
       .insert([recordPayload])
       .select()
       .single();
+
+    if (dbError) {
+      console.warn('DB insert attempt with base64 notice, retrying lean:', dbError.message);
+      const leanPayload = { ...recordPayload };
+      delete leanPayload.pdf_base64;
+      const { data: altQuotation, error: altDbError } = await supabase
+        .from('quotations')
+        .insert([leanPayload])
+        .select()
+        .single();
+      if (!altDbError) {
+        newQuotation = altQuotation;
+        dbError = null;
+      }
+    }
 
     if (dbError) {
       console.error('Supabase DB Insert Error for quotation:', dbError);
