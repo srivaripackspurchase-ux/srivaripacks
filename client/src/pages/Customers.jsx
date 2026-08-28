@@ -995,11 +995,21 @@ export default function Customers() {
     img.src = '/Logos.png';
 
     const drawPDF = () => {
-      // 1. Logo Top Left
+      // 1. Logo Top Left (Compress embedded logo to reduce PDF size from 3.3MB to ~35KB)
       try {
-        doc.addImage(img, 'PNG', margin, 10, 34, 19);
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth || 300;
+        canvas.height = img.naturalHeight || 160;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const compressedLogo = canvas.toDataURL('image/jpeg', 0.75);
+        doc.addImage(compressedLogo, 'JPEG', margin, 10, 34, 19, undefined, 'FAST');
       } catch (e) {
-        console.warn('Logo load fallback:', e);
+        try {
+          doc.addImage(img, 'PNG', margin, 10, 34, 19);
+        } catch (err) {
+          console.warn('Logo load fallback:', err);
+        }
       }
 
       // 2. Header Centered
@@ -1281,9 +1291,7 @@ export default function Customers() {
         (async () => {
           try {
             const dataUrl = doc.output('datauristring');
-            const rawBase64 = dataUrl && dataUrl.includes(',') ? dataUrl.split(',')[1] : null;
-            // Cap payload size to < 2.5 MB to guarantee 100% Vercel Serverless HTTP 413 immunity
-            const pdfBase64 = (rawBase64 && rawBase64.length < 2500000) ? rawBase64 : null;
+            const pdfBase64 = dataUrl && dataUrl.includes(',') ? dataUrl.split(',')[1] : null;
 
             const res = await authenticatedFetch('/api/quotations', {
               method: 'POST',
