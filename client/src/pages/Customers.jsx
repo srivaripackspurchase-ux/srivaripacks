@@ -1279,6 +1279,8 @@ export default function Customers() {
           try {
             const dataUrl = doc.output('datauristring');
             const pdfBase64 = dataUrl && dataUrl.includes(',') ? dataUrl.split(',')[1] : null;
+            // Cap payload size to < 3 MB to guarantee Vercel Serverless HTTP 413 immunity
+            const safeBase64 = (pdfBase64 && pdfBase64.length < 3000000) ? pdfBase64 : null;
             const finalNo = quotationHeader.quotationNo || `SVP/Q-${new Date().getFullYear()}/${String(Date.now()).slice(-5)}`;
 
             const res = await authenticatedFetch('/api/quotations', {
@@ -1289,7 +1291,7 @@ export default function Customers() {
                 file_id: quotationFolder || null,
                 quotation_number: finalNo,
                 pdf_file_name: pdfFileName,
-                pdf_base64: pdfBase64
+                pdf_base64: safeBase64
               })
             });
 
