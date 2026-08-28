@@ -225,7 +225,7 @@ export default function UserAccess() {
   };
 
   return (
-    <div className="container animate-fade-in" style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="page-container animate-fade">
       
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', flexWrap: 'wrap', gap: '16px' }}>

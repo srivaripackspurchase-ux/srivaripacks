@@ -2974,7 +2974,7 @@ export default function AddCustomer() {
 
 
   return (
-    <div style={{ padding: '24px 32px', maxWidth: '100%', width: '100%' }} className="animate-fade">
+    <div className="page-container animate-fade">
 
       {/* ── Page Title ── */}
       <div style={{ marginBottom: '24px' }}>

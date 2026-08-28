@@ -328,10 +328,80 @@ button, input, select, textarea {
   animation: pulseGlow 3s infinite;
 }
 
-/* Responsive Utilities */
+/* ==========================================
+   📱 COMPREHENSIVE RESPONSIVE UTILITIES
+   ========================================== */
+
+/* Tablet & Smaller Laptops (<= 1024px) */
+@media (max-width: 1024px) {
+  .calculator-layout {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+}
+
+/* Mobile & Small Tablets (<= 768px) */
 @media (max-width: 768px) {
   .desktop-only {
     display: none !important;
+  }
+
+  h1 {
+    font-size: 1.6rem !important;
+  }
+
+  h2 {
+    font-size: 1.25rem !important;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .glass-panel {
+    padding: 16px !important;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 16px;
+  }
+
+  .custom-table {
+    min-width: 650px; /* Ensure table doesn't get squeezed below readable width */
+  }
+
+  .custom-table th, .custom-table td {
+    padding: 8px 10px !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Extra Small Mobile Devices (<= 480px) */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.35rem !important;
+  }
+
+  h2 {
+    font-size: 1.1rem !important;
+  }
+
+  .btn-primary, .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .form-control {
+    font-size: 0.9rem !important;
+    padding: 10px 12px !important;
   }
 }
 

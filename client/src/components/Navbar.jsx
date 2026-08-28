@@ -61,22 +61,22 @@ export const Navbar = ({ sidebarOpen, setSidebarOpen, isLanding = false, onLogin
           <img 
             src="/Logos.png" 
             alt="SRI VARI PACKS Logo" 
-            style={{ height: '48px', width: 'auto', objectFit: 'contain' }} 
+            style={{ height: '44px', width: 'auto', objectFit: 'contain' }} 
           />
-          <span style={{ fontSize: '1.25rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }} className="gradient-text">
+          <span style={{ fontSize: '1.2rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }} className="gradient-text nav-brand-title">
             SRI VARI PACKS
           </span>
         </Link>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         {/* User / Admin Identity Badge */}
         {user && !isLanding && (
           <div style={{
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            padding: '6px 14px',
+            padding: '6px 12px',
             borderRadius: '20px',
             backgroundColor: 'var(--bg-tertiary)',
             border: '1px solid var(--border-color)',
@@ -89,7 +89,7 @@ export const Navbar = ({ sidebarOpen, setSidebarOpen, isLanding = false, onLogin
             ) : (
               <User size={16} style={{ color: 'var(--color-accent)' }} />
             )}
-            <span>{user.full_name || user.username}</span>
+            <span className="nav-user-text">{user.full_name || user.username}</span>
           </div>
         )}
 
@@ -102,8 +102,8 @@ export const Navbar = ({ sidebarOpen, setSidebarOpen, isLanding = false, onLogin
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
-              padding: '8px 16px',
+              gap: '6px',
+              padding: '8px 12px',
               borderRadius: 'var(--radius-md)',
               backgroundColor: 'rgba(239, 68, 68, 0.1)',
               border: '1px solid rgba(239, 68, 68, 0.25)',
@@ -117,7 +117,7 @@ export const Navbar = ({ sidebarOpen, setSidebarOpen, isLanding = false, onLogin
             title="Log Out"
           >
             <LogOut size={16} />
-            <span>Log Out</span>
+            <span className="nav-logout-text">Log Out</span>
           </button>
         )}
 

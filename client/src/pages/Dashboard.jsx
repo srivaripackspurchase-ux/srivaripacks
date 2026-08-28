@@ -43,20 +43,20 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div style={{ padding: '24px 32px', maxWidth: '100%', width: '100%' }} className="animate-fade">
+    <div className="page-container animate-fade">
 
       {/* Welcome banner */}
-      <div style={{ marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '2.4rem', fontFamily: 'var(--font-heading)', marginBottom: '8px' }}>
+      <div style={{ marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '2rem', fontFamily: 'var(--font-heading)', marginBottom: '8px' }}>
           Welcome back, <span className="gradient-text">{user?.full_name || 'User'}</span>!
         </h1>
-        <p style={{ color: 'var(--text-secondary)' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
           Here is a summary of your box packaging inventory and order calculations.
         </p>
       </div>
 
       {/* Stats Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', marginBottom: '40px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px', marginBottom: '32px' }}>
 
         {/* Total Calculations */}
         <div className="glass-panel" style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
