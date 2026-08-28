@@ -1281,7 +1281,9 @@ export default function Customers() {
         (async () => {
           try {
             const dataUrl = doc.output('datauristring');
-            const pdfBase64 = dataUrl && dataUrl.includes(',') ? dataUrl.split(',')[1] : null;
+            const rawBase64 = dataUrl && dataUrl.includes(',') ? dataUrl.split(',')[1] : null;
+            // Cap payload size to < 2.5 MB to guarantee 100% Vercel Serverless HTTP 413 immunity
+            const pdfBase64 = (rawBase64 && rawBase64.length < 2500000) ? rawBase64 : null;
 
             const res = await authenticatedFetch('/api/quotations', {
               method: 'POST',
