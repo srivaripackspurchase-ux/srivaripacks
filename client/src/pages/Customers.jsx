@@ -995,14 +995,16 @@ export default function Customers() {
     img.src = '/Logos.png';
 
     const drawPDF = () => {
-      // 1. Logo Top Left (Compress embedded logo to reduce PDF size from 3.3MB to ~35KB)
+      // 1. Logo Top Left (White canvas fill keeps transparent PNG logo crisp & bright white)
       try {
         const canvas = document.createElement('canvas');
         canvas.width = img.naturalWidth || 300;
         canvas.height = img.naturalHeight || 160;
         const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        const compressedLogo = canvas.toDataURL('image/jpeg', 0.75);
+        const compressedLogo = canvas.toDataURL('image/jpeg', 0.85);
         doc.addImage(compressedLogo, 'JPEG', margin, 10, 34, 19, undefined, 'FAST');
       } catch (e) {
         try {
