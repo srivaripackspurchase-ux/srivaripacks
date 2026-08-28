@@ -1267,7 +1267,10 @@ export default function Customers() {
 
       const safeCompName = (quotationHeader.toCompany || 'Customer').replace(/M\/s\./gi, '').replace(/[^a-zA-Z0-9\s_-]/g, '').trim();
       const formattedDateDash = (displayDate || '').replace(/\//g, '-');
-      const pdfFileName = `${safeCompName}-${formattedDateDash}.pdf`;
+      const finalNo = quotationHeader.quotationNo || `SVP/Q-${new Date().getFullYear()}/${String(Date.now()).slice(-5)}`;
+      const cleanQuotationNo = finalNo.replace(/[^a-zA-Z0-9_-]/g, '-');
+      // Include unique quotation number in filename to prevent overwriting different quotation PDFs
+      const pdfFileName = `${safeCompName}_${cleanQuotationNo}.pdf`;
 
       // 1. Local Download to User's Device (Instant 0s response)
       doc.save(pdfFileName);
@@ -1279,9 +1282,6 @@ export default function Customers() {
           try {
             const dataUrl = doc.output('datauristring');
             const pdfBase64 = dataUrl && dataUrl.includes(',') ? dataUrl.split(',')[1] : null;
-            // Cap payload size to < 3 MB to guarantee Vercel Serverless HTTP 413 immunity
-            const safeBase64 = (pdfBase64 && pdfBase64.length < 3000000) ? pdfBase64 : null;
-            const finalNo = quotationHeader.quotationNo || `SVP/Q-${new Date().getFullYear()}/${String(Date.now()).slice(-5)}`;
 
             const res = await authenticatedFetch('/api/quotations', {
               method: 'POST',
@@ -1291,7 +1291,7 @@ export default function Customers() {
                 file_id: quotationFolder || null,
                 quotation_number: finalNo,
                 pdf_file_name: pdfFileName,
-                pdf_base64: safeBase64
+                pdf_base64: pdfBase64
               })
             });
 
