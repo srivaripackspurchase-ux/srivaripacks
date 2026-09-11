@@ -335,8 +335,25 @@ router.get('/', auth, async (req, res) => {
       const dupP = c.duplex_price !== undefined && c.duplex_price !== null ? Number(c.duplex_price) : duplexPrice;
       const useLam = c.is_laminated !== undefined && c.is_laminated !== null ? !!c.is_laminated : isLaminated;
       const lamP = c.lamination_price !== undefined && c.lamination_price !== null ? Number(c.lamination_price) : laminationPrice;
+      let extraMeta = null;
+      const extraMatchRec = custNameRaw.match(/\[ExtraChargesMeta:\s*(\{.*?\})\]/i);
+      if (extraMatchRec) {
+        try { extraMeta = JSON.parse(extraMatchRec[1]); } catch (e) {}
+      }
+
       const usePrn = c.is_printing !== undefined && c.is_printing !== null ? !!c.is_printing : isPrinting;
-      const prnP = c.printing_price !== undefined && c.printing_price !== null ? Number(c.printing_price) : printingPrice;
+      let prnP = printingPrice;
+      if (prnP === 0 && c.printing_price !== undefined && c.printing_price !== null) {
+        prnP = Number(c.printing_price);
+      }
+      if (extraMeta && extraMeta.printingLabour && c.printing_price !== undefined && Number(c.printing_price) === Number(extraMeta.printingLabour)) {
+        if (printingPrice > 0) {
+          prnP = printingPrice;
+        } else if (c.quantity_of_boxes > 0) {
+          const totPrn = Number(extraMeta.printingLabour) + (Number(extraMeta.printingPlatePrice || 0) * Number(extraMeta.printingNoOfPlates || 0));
+          prnP = totPrn / Number(c.quantity_of_boxes);
+        }
+      }
       const useInk = c.is_ink !== undefined && c.is_ink !== null ? !!c.is_ink : isInk;
       const inkP = c.ink_price !== undefined && c.ink_price !== null ? Number(c.ink_price) : inkPrice;
       const useScr = c.is_screen_printing !== undefined && c.is_screen_printing !== null ? !!c.is_screen_printing : isScreenPrinting;
@@ -933,8 +950,25 @@ router.get('/:id', auth, async (req, res) => {
       const dupP = calc.duplex_price !== undefined && calc.duplex_price !== null ? Number(calc.duplex_price) : duplexPrice;
       const useLam = calc.is_laminated !== undefined && calc.is_laminated !== null ? !!calc.is_laminated : isLaminated;
       const lamP = calc.lamination_price !== undefined && calc.lamination_price !== null ? Number(calc.lamination_price) : laminationPrice;
+      let extraMetaSingle = null;
+      const extraMatchSingle = custNameRaw.match(/\[ExtraChargesMeta:\s*(\{.*?\})\]/i);
+      if (extraMatchSingle) {
+        try { extraMetaSingle = JSON.parse(extraMatchSingle[1]); } catch (e) {}
+      }
+
       const usePrn = calc.is_printing !== undefined && calc.is_printing !== null ? !!calc.is_printing : isPrinting;
-      const prnP = calc.printing_price !== undefined && calc.printing_price !== null ? Number(calc.printing_price) : printingPrice;
+      let prnP = printingPrice;
+      if (prnP === 0 && calc.printing_price !== undefined && calc.printing_price !== null) {
+        prnP = Number(calc.printing_price);
+      }
+      if (extraMetaSingle && extraMetaSingle.printingLabour && calc.printing_price !== undefined && Number(calc.printing_price) === Number(extraMetaSingle.printingLabour)) {
+        if (printingPrice > 0) {
+          prnP = printingPrice;
+        } else if (calc.quantity_of_boxes > 0) {
+          const totPrn = Number(extraMetaSingle.printingLabour) + (Number(extraMetaSingle.printingPlatePrice || 0) * Number(extraMetaSingle.printingNoOfPlates || 0));
+          prnP = totPrn / Number(calc.quantity_of_boxes);
+        }
+      }
       const useInk = calc.is_ink !== undefined && calc.is_ink !== null ? !!calc.is_ink : isInk;
       const inkP = calc.ink_price !== undefined && calc.ink_price !== null ? Number(calc.ink_price) : inkPrice;
       const useScr = calc.is_screen_printing !== undefined && calc.is_screen_printing !== null ? !!calc.is_screen_printing : isScreenPrinting;

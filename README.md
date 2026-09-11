@@ -16,8 +16,7 @@ The file [supabase_setup.sql](file:///d:/Muthukumar/supabase_setup.sql) has been
    - `companies` table
    - `company_sizes` table
    - `customers` (calculation logs) table
-   - Seed data including the default user: `muthu_user` (password: `muthu123`) and default Muthukumar dimensions.
-
+   
 ---
 
 ## 🛠️ Configuration (.env)
@@ -32,7 +31,7 @@ SUPABASE_KEY=YOUR_SUPABASE_ANON_OR_SERVICE_KEY
 ```
 
 > [!TIP]
-> **Mock / Offline Mode:** If you do not configure the Supabase URL and Key, the application will automatically run in **Mock Mode** using in-memory arrays. You can sign in with the username `muthu_user` and password `muthu123` to test the application instantly!
+> **Mock / Offline Mode:** If you do not configure the Supabase URL and Key, the application will automatically run in **Mock Mode** using in-memory arrays. You can sign in with the username  to test the application instantly!
 
 ---
 
