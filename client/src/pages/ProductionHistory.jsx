@@ -370,9 +370,15 @@ export default function ProductionHistory() {
 
     const qty = calc.quantity_of_boxes || 0;
     const ply = Number(calc.ply_type) || 3;
+    const qtyMult = Number(calc.quantity_of_data) || 1;
 
-    let defaultPackingCount = (!pOption || pOption === '-') ? 0 : qty;
-    let defaultLinerCount = (isPad ? ply : (ply - 1) / 2) * qty;
+    let defaultPackingCount = (!pOption || pOption === '-') ? 0 : qty * qtyMult;
+    let defaultLinerCount = ((ply - 1) / 2) * qty * qtyMult;
+
+    if (savedMultiplier > 1) {
+      defaultPackingCount = Math.ceil(defaultPackingCount / savedMultiplier);
+      defaultLinerCount = Math.ceil(defaultLinerCount / savedMultiplier);
+    }
 
     let packingCount = defaultPackingCount;
     let linerCount = defaultLinerCount;
@@ -389,19 +395,25 @@ export default function ProductionHistory() {
     try {
       const parsed = JSON.parse(calc.customer_name);
       if (parsed) {
-        if (parsed.packingPaperCount !== undefined) packingCount = parsed.packingPaperCount;
-        if (parsed.linerCount !== undefined) linerCount = parsed.linerCount;
+        const isPreDivided = !!parsed.isPreDivided;
+        const mult = (isPreDivided || savedMultiplier <= 1) ? 1 : savedMultiplier;
+
+        if (parsed.packingPaperCount !== undefined) packingCount = Math.ceil(parsed.packingPaperCount / mult);
+        if (parsed.linerCount !== undefined) linerCount = Math.ceil(parsed.linerCount / mult);
 
         if (isSleave || isCollerBox || isTopSideTrayBox) {
-          lengthPackingCount = parsed.lengthPackingPaperCount !== undefined ? parsed.lengthPackingPaperCount : defaultPackingCount;
-          widthPackingCount = parsed.widthPackingPaperCount !== undefined ? parsed.widthPackingPaperCount : defaultPackingCount;
-          lengthLinerCount = parsed.lengthLinerCount !== undefined ? parsed.lengthLinerCount : defaultLinerCount;
-          widthLinerCount = parsed.widthLinerCount !== undefined ? parsed.widthLinerCount : defaultLinerCount;
+          const defaultSubPack = Math.ceil((!pOption || pOption === '-' ? 0 : qty * 2 * qtyMult) / savedMultiplier);
+          const defaultSubLiner = Math.ceil((((ply - 1) / 2) * qty * 2 * qtyMult) / savedMultiplier);
+
+          lengthPackingCount = parsed.lengthPackingPaperCount !== undefined ? Math.ceil(parsed.lengthPackingPaperCount / mult) : defaultSubPack;
+          widthPackingCount = parsed.widthPackingPaperCount !== undefined ? Math.ceil(parsed.widthPackingPaperCount / mult) : defaultSubPack;
+          lengthLinerCount = parsed.lengthLinerCount !== undefined ? Math.ceil(parsed.lengthLinerCount / mult) : defaultSubLiner;
+          widthLinerCount = parsed.widthLinerCount !== undefined ? Math.ceil(parsed.widthLinerCount / mult) : defaultSubLiner;
         } else if (isUniversalType) {
-          topPackingCount = parsed.topPackingPaperCount !== undefined ? parsed.topPackingPaperCount : defaultPackingCount;
-          bottomPackingCount = parsed.bottomPackingPaperCount !== undefined ? parsed.bottomPackingPaperCount : defaultPackingCount;
-          topLinerCount = parsed.topLinerCount !== undefined ? parsed.topLinerCount : defaultLinerCount;
-          bottomLinerCount = parsed.bottomLinerCount !== undefined ? parsed.bottomLinerCount : defaultLinerCount;
+          topPackingCount = parsed.topPackingPaperCount !== undefined ? Math.ceil(parsed.topPackingPaperCount / mult) : defaultPackingCount;
+          bottomPackingCount = parsed.bottomPackingPaperCount !== undefined ? Math.ceil(parsed.bottomPackingPaperCount / mult) : defaultPackingCount;
+          topLinerCount = parsed.topLinerCount !== undefined ? Math.ceil(parsed.topLinerCount / mult) : defaultLinerCount;
+          bottomLinerCount = parsed.bottomLinerCount !== undefined ? Math.ceil(parsed.bottomLinerCount / mult) : defaultLinerCount;
         }
       }
     } catch (e) { }

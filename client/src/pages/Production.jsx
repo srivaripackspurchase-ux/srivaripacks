@@ -1383,23 +1383,25 @@ export default function Production() {
     try {
       const netReel = parseNumeric(padReelSizePlus, 0) - parseNumeric(padReelSizeMinus, 0);
       const netCut = parseNumeric(padCutSizePlus, 0) - parseNumeric(padCutSizeMinus, 0);
+      const reelMult = parseNumeric(padReelMultiplier, 1);
+      const cutMult = parseNumeric(padCutMultiplier, 1);
       const computed = calculatePadPricing({
         L: convertToInches(selectedSize.length_inches, selectedSize.unit), W: convertToInches(selectedSize.width_inches, selectedSize.unit),
         qtyPads: Number(padQtyPads), plyType: Number(padPlyType),
         fluteExtraPercent: Number(padFluteExtraPercent), pricePerKg: 0,
         qtyData: Number(padQtyData), gstPercent: 0,
-        reelSizeAdjust: netReel,
-        cutSizeAdjust: netCut,
+        reelSizeAdjust: reelMult > 0 ? netReel / reelMult : netReel,
+        cutSizeAdjust: cutMult > 0 ? netCut / cutMult : netCut,
         gsmPaper: Number(padGsmPaper), gsmFlute: Number(padGsmFlute), gsmPacking: padHasPacking ? Number(padGsmPacking) : 0
       });
       setPadResults({
         ...computed,
-        padPackingPaperCount: padHasPacking ? Number(padQtyPads) * 1 : 0,
-        padLinerCount: Number(padQtyPads) * ((Number(padPlyType) - 1) / 2),
+        padPackingPaperCount: padHasPacking ? parseNumeric(padQtyPads, 0) * parseNumeric(padQtyData, 1) * 1 : 0,
+        padLinerCount: parseNumeric(padQtyPads, 0) * parseNumeric(padQtyData, 1) * ((parseNumeric(padPlyType, 3) - 1) / 2),
         selectedSize
       });
     } catch (e) { console.error('Pad calculation error:', e); setPadResults(null); }
-  }, [padSizeId, padSizes, padQtyPads, padPlyType, padFluteExtraPercent, padQtyData, padReelSizePlus, padReelSizeMinus, padCutSizePlus, padCutSizeMinus, padGsmPaper, padGsmFlute, padGsmPacking, padHasPacking]);
+  }, [padSizeId, padSizes, padQtyPads, padPlyType, padFluteExtraPercent, padQtyData, padReelSizePlus, padReelSizeMinus, padCutSizePlus, padCutSizeMinus, padReelMultiplier, padCutMultiplier, padGsmPaper, padGsmFlute, padGsmPacking, padHasPacking]);
 
   // Partition live calculation
   useEffect(() => {
@@ -1409,17 +1411,21 @@ export default function Production() {
     try {
       const netReel = parseNumeric(partitionReelSizePlus, 0) - parseNumeric(partitionReelSizeMinus, 0);
       const netCut = parseNumeric(partitionCutSizePlus, 0) - parseNumeric(partitionCutSizeMinus, 0);
+      const reelMult = parseNumeric(partitionReelMultiplier, 1);
+      const cutMult = parseNumeric(partitionCutMultiplier, 1);
+      const reelAdj = reelMult > 0 ? netReel / reelMult : netReel;
+      const cutAdj = cutMult > 0 ? netCut / cutMult : netCut;
       if (selectedOption.type === 'paired') {
         const computed = calculatePairedPartitionPricing({
           first: { L: convertToInches(selectedOption.first.length_inches, selectedOption.first.unit), W: convertToInches(selectedOption.first.width_inches, selectedOption.first.unit), slotCount: selectedOption.first.slot_count || 1 },
           second: { L: convertToInches(selectedOption.second.length_inches, selectedOption.second.unit), W: convertToInches(selectedOption.second.width_inches, selectedOption.second.unit), slotCount: selectedOption.second.slot_count || 1 },
           set: Number(partitionSet), qtyPads: Number(partitionQtyPads), plyType: Number(partitionPlyType),
           fluteExtraPercent: Number(partitionFluteExtraPercent), pricePerKg: 0, gstPercent: 0,
-          reelSizeAdjust: netReel,
-          cutSizeAdjust: netCut,
+          reelSizeAdjust: reelAdj,
+          cutSizeAdjust: cutAdj,
           gsmPaper: Number(partitionGsmPaper), gsmFlute: Number(partitionGsmFlute), gsmPacking: partitionHasPacking ? Number(partitionGsmPacking) : 0
         });
-        setPartitionResults({ ...computed, isPaired: true, padPackingPaperCount: partitionHasPacking ? Number(partitionQtyPads) * 1 : 0, padLinerCount: Number(partitionQtyPads) * ((Number(partitionPlyType) - 1) / 2) });
+        setPartitionResults({ ...computed, isPaired: true, padPackingPaperCount: partitionHasPacking ? parseNumeric(partitionQtyPads, 0) * parseNumeric(partitionSet, 1) * parseNumeric(partitionQtyData, 1) * 1 : 0, padLinerCount: parseNumeric(partitionQtyPads, 0) * parseNumeric(partitionSet, 1) * parseNumeric(partitionQtyData, 1) * ((parseNumeric(partitionPlyType, 3) - 1) / 2) });
       } else {
         const selectedSize = selectedOption.size;
         const computed = calculatePartitionPricing({
@@ -1427,14 +1433,14 @@ export default function Production() {
           qtyPads: Number(partitionQtyPads), plyType: Number(partitionPlyType),
           fluteExtraPercent: Number(partitionFluteExtraPercent), pricePerKg: 0,
           qtyData: Number(partitionQtyData), gstPercent: 0,
-          reelSizeAdjust: netReel,
-          cutSizeAdjust: netCut,
+          reelSizeAdjust: reelAdj,
+          cutSizeAdjust: cutAdj,
           gsmPaper: Number(partitionGsmPaper), gsmFlute: Number(partitionGsmFlute), gsmPacking: partitionHasPacking ? Number(partitionGsmPacking) : 0
         });
-        setPartitionResults({ ...computed, isPaired: false, padPackingPaperCount: partitionHasPacking ? Number(partitionQtyPads) * Number(partitionSet) * 1 : 0, padLinerCount: Number(partitionQtyPads) * Number(partitionSet) * ((Number(partitionPlyType) - 1) / 2), selectedSize });
+        setPartitionResults({ ...computed, isPaired: false, padPackingPaperCount: partitionHasPacking ? parseNumeric(partitionQtyPads, 0) * parseNumeric(partitionSet, 1) * parseNumeric(partitionQtyData, 1) * 1 : 0, padLinerCount: parseNumeric(partitionQtyPads, 0) * parseNumeric(partitionSet, 1) * parseNumeric(partitionQtyData, 1) * ((parseNumeric(partitionPlyType, 3) - 1) / 2), selectedSize });
       }
     } catch (e) { console.error('Partition calculation error:', e); setPartitionResults(null); }
-  }, [partitionSizeId, partitionGroupedSizes, partitionQtyPads, partitionPlyType, partitionFluteExtraPercent, partitionQtyData, partitionReelSizePlus, partitionReelSizeMinus, partitionCutSizePlus, partitionCutSizeMinus, partitionGsmPaper, partitionGsmFlute, partitionGsmPacking, partitionHasPacking, partitionSet]);
+  }, [partitionSizeId, partitionGroupedSizes, partitionQtyPads, partitionPlyType, partitionFluteExtraPercent, partitionQtyData, partitionReelSizePlus, partitionReelSizeMinus, partitionCutSizePlus, partitionCutSizeMinus, partitionReelMultiplier, partitionCutMultiplier, partitionGsmPaper, partitionGsmFlute, partitionGsmPacking, partitionHasPacking, partitionSet]);
 
   // Tray live calculation
   useEffect(() => {
@@ -1444,23 +1450,25 @@ export default function Production() {
     try {
       const netReel = parseNumeric(trayReelSizePlus, 0) - parseNumeric(trayReelSizeMinus, 0);
       const netCut = parseNumeric(trayCutSizePlus, 0) - parseNumeric(trayCutSizeMinus, 0);
+      const reelMult = parseNumeric(trayReelMultiplier, 1);
+      const cutMult = parseNumeric(trayCutMultiplier, 1);
       const computed = calculateTrayPricing({
         L: convertToInches(selectedSize.length_inches, selectedSize.unit), W: convertToInches(selectedSize.width_inches, selectedSize.unit), H: convertToInches(selectedSize.height_inches, selectedSize.unit),
         qtyTrays: Number(trayQtyTrays), plyType: Number(trayPlyType),
         fluteExtraPercent: Number(trayFluteExtraPercent), pricePerKg: 0,
         qtyData: Number(trayQtyData), gstPercent: 0,
-        reelSizeAdjust: netReel,
-        cutSizeAdjust: netCut,
+        reelSizeAdjust: reelMult > 0 ? netReel / reelMult : netReel,
+        cutSizeAdjust: cutMult > 0 ? netCut / cutMult : netCut,
         gsmPaper: Number(trayGsmPaper), gsmFlute: Number(trayGsmFlute), gsmPacking: trayHasPacking ? Number(trayGsmPacking) : 0
       });
       setTrayResults({
         ...computed,
-        trayPackingPaperCount: trayHasPacking ? Number(trayQtyTrays) * 1 : 0,
-        trayLinerCount: Number(trayQtyTrays) * ((Number(trayPlyType) - 1) / 2),
+        trayPackingPaperCount: trayHasPacking ? parseNumeric(trayQtyTrays, 0) * parseNumeric(trayQtyData, 1) * 1 : 0,
+        trayLinerCount: parseNumeric(trayQtyTrays, 0) * parseNumeric(trayQtyData, 1) * ((parseNumeric(trayPlyType, 3) - 1) / 2),
         selectedSize
       });
     } catch (e) { console.error('Tray calculation error:', e); setTrayResults(null); }
-  }, [traySizeId, traySizes, trayQtyTrays, trayPlyType, trayFluteExtraPercent, trayQtyData, trayReelSizePlus, trayReelSizeMinus, trayCutSizePlus, trayCutSizeMinus, trayGsmPaper, trayGsmFlute, trayGsmPacking, trayHasPacking]);
+  }, [traySizeId, traySizes, trayQtyTrays, trayPlyType, trayFluteExtraPercent, trayQtyData, trayReelSizePlus, trayReelSizeMinus, trayCutSizePlus, trayCutSizeMinus, trayReelMultiplier, trayCutMultiplier, trayGsmPaper, trayGsmFlute, trayGsmPacking, trayHasPacking]);
 
   // Sleave live calculation
   useEffect(() => {
@@ -1470,26 +1478,28 @@ export default function Production() {
     try {
       const netReel = parseNumeric(sleaveReelSizePlus, 0) - parseNumeric(sleaveReelSizeMinus, 0);
       const netCut = parseNumeric(sleaveCutSizePlus, 0) - parseNumeric(sleaveCutSizeMinus, 0);
+      const reelMult = parseNumeric(sleaveReelMultiplier, 1);
+      const cutMult = parseNumeric(sleaveCutMultiplier, 1);
       const computed = calculateSleavePricing({
         L: convertToInches(selectedSize.length_inches, selectedSize.unit), W: convertToInches(selectedSize.width_inches, selectedSize.unit), H: convertToInches(selectedSize.height_inches, selectedSize.unit),
         flabL: Number(sleaveFlabL), flabW: Number(sleaveFlabW),
         qtyBoxes: Number(sleaveQty), plyType: Number(sleavePlyType),
         fluteExtraPercent: Number(sleaveFluteExtraPercent), pricePerKg: 0,
         qtyData: Number(sleaveQtyData), gstPercent: 0,
-        reelSizeAdjust: netReel,
-        cutSizeAdjust: netCut,
+        reelSizeAdjust: reelMult > 0 ? netReel / reelMult : netReel,
+        cutSizeAdjust: cutMult > 0 ? netCut / cutMult : netCut,
         gsmPaper: Number(sleaveGsmPaper), gsmFlute: Number(sleaveGsmFlute), gsmPacking: sleaveHasPacking ? Number(sleaveGsmPacking) : 0
       });
       setSleaveResults({
         ...computed,
-        sleaveLengthPackingPaperCount: sleaveHasPacking ? Number(sleaveQty) * 2 * 1 : 0,
-        sleaveLengthLinerCount: Number(sleaveQty) * 2 * ((Number(sleavePlyType) - 1) / 2),
-        sleaveWidthPackingPaperCount: sleaveHasPacking ? Number(sleaveQty) * 2 * 1 : 0,
-        sleaveWidthLinerCount: Number(sleaveQty) * 2 * ((Number(sleavePlyType) - 1) / 2),
+        sleaveLengthPackingPaperCount: sleaveHasPacking ? parseNumeric(sleaveQty, 0) * 2 * parseNumeric(sleaveQtyData, 1) * 1 : 0,
+        sleaveLengthLinerCount: parseNumeric(sleaveQty, 0) * 2 * parseNumeric(sleaveQtyData, 1) * ((parseNumeric(sleavePlyType, 3) - 1) / 2),
+        sleaveWidthPackingPaperCount: sleaveHasPacking ? parseNumeric(sleaveQty, 0) * 2 * parseNumeric(sleaveQtyData, 1) * 1 : 0,
+        sleaveWidthLinerCount: parseNumeric(sleaveQty, 0) * 2 * parseNumeric(sleaveQtyData, 1) * ((parseNumeric(sleavePlyType, 3) - 1) / 2),
         selectedSize
       });
     } catch (e) { console.error('Sleave calculation error:', e); setSleaveResults(null); }
-  }, [sleaveSizeId, sleaveSizes, sleaveQty, sleavePlyType, sleaveFluteExtraPercent, sleaveQtyData, sleaveReelSizePlus, sleaveReelSizeMinus, sleaveCutSizePlus, sleaveCutSizeMinus, sleaveFlabL, sleaveFlabW, sleaveGsmPaper, sleaveGsmFlute, sleaveGsmPacking, sleaveHasPacking]);
+  }, [sleaveSizeId, sleaveSizes, sleaveQty, sleavePlyType, sleaveFluteExtraPercent, sleaveQtyData, sleaveReelSizePlus, sleaveReelSizeMinus, sleaveCutSizePlus, sleaveCutSizeMinus, sleaveReelMultiplier, sleaveCutMultiplier, sleaveFlabL, sleaveFlabW, sleaveGsmPaper, sleaveGsmFlute, sleaveGsmPacking, sleaveHasPacking]);
 
   // Coller Box live calculation
   useEffect(() => {
@@ -1499,26 +1509,28 @@ export default function Production() {
     try {
       const netReel = parseNumeric(collerBoxReelSizePlus, 0) - parseNumeric(collerBoxReelSizeMinus, 0);
       const netCut = parseNumeric(collerBoxCutSizePlus, 0) - parseNumeric(collerBoxCutSizeMinus, 0);
+      const reelMult = parseNumeric(collerBoxReelMultiplier, 1);
+      const cutMult = parseNumeric(collerBoxCutMultiplier, 1);
       const computed = calculateCollerBoxPricing({
         L: convertToInches(selectedSize.length_inches, selectedSize.unit), W: convertToInches(selectedSize.width_inches, selectedSize.unit), H: convertToInches(selectedSize.height_inches, selectedSize.unit),
         flabL: Number(collerBoxFlabL), flabW: Number(collerBoxFlabW),
         qtyBoxes: Number(collerBoxQty), plyType: Number(collerBoxPlyType),
         fluteExtraPercent: Number(collerBoxFluteExtraPercent), pricePerKg: 0,
         qtyData: Number(collerBoxQtyData), gstPercent: 0,
-        reelSizeAdjust: netReel,
-        cutSizeAdjust: netCut,
+        reelSizeAdjust: reelMult > 0 ? netReel / reelMult : netReel,
+        cutSizeAdjust: cutMult > 0 ? netCut / cutMult : netCut,
         gsmPaper: Number(collerBoxGsmPaper), gsmFlute: Number(collerBoxGsmFlute), gsmPacking: collerBoxHasPacking ? Number(collerBoxGsmPacking) : 0
       });
       setCollerBoxResults({
         ...computed,
-        collerBoxLengthPackingPaperCount: collerBoxHasPacking ? Number(collerBoxQty) * 2 * 1 : 0,
-        collerBoxLengthLinerCount: Number(collerBoxQty) * 2 * ((Number(collerBoxPlyType) - 1) / 2),
-        collerBoxWidthPackingPaperCount: collerBoxHasPacking ? Number(collerBoxQty) * 2 * 1 : 0,
-        collerBoxWidthLinerCount: Number(collerBoxQty) * 2 * ((Number(collerBoxPlyType) - 1) / 2),
+        collerBoxLengthPackingPaperCount: collerBoxHasPacking ? parseNumeric(collerBoxQty, 0) * 2 * parseNumeric(collerBoxQtyData, 1) * 1 : 0,
+        collerBoxLengthLinerCount: parseNumeric(collerBoxQty, 0) * 2 * parseNumeric(collerBoxQtyData, 1) * ((parseNumeric(collerBoxPlyType, 3) - 1) / 2),
+        collerBoxWidthPackingPaperCount: collerBoxHasPacking ? parseNumeric(collerBoxQty, 0) * 2 * parseNumeric(collerBoxQtyData, 1) * 1 : 0,
+        collerBoxWidthLinerCount: parseNumeric(collerBoxQty, 0) * 2 * parseNumeric(collerBoxQtyData, 1) * ((parseNumeric(collerBoxPlyType, 3) - 1) / 2),
         selectedSize
       });
     } catch (e) { console.error('Coller Box calculation error:', e); setCollerBoxResults(null); }
-  }, [collerBoxSizeId, collerBoxSizes, collerBoxQty, collerBoxPlyType, collerBoxFluteExtraPercent, collerBoxQtyData, collerBoxReelSizePlus, collerBoxReelSizeMinus, collerBoxCutSizePlus, collerBoxCutSizeMinus, collerBoxFlabL, collerBoxFlabW, collerBoxGsmPaper, collerBoxGsmFlute, collerBoxGsmPacking, collerBoxHasPacking]);
+  }, [collerBoxSizeId, collerBoxSizes, collerBoxQty, collerBoxPlyType, collerBoxFluteExtraPercent, collerBoxQtyData, collerBoxReelSizePlus, collerBoxReelSizeMinus, collerBoxCutSizePlus, collerBoxCutSizeMinus, collerBoxReelMultiplier, collerBoxCutMultiplier, collerBoxFlabL, collerBoxFlabW, collerBoxGsmPaper, collerBoxGsmFlute, collerBoxGsmPacking, collerBoxHasPacking]);
 
   // Top Side Tray Box live calculation
   useEffect(() => {
@@ -1528,26 +1540,28 @@ export default function Production() {
     try {
       const netReel = parseNumeric(uBoxReelSizePlus, 0) - parseNumeric(uBoxReelSizeMinus, 0);
       const netCut = parseNumeric(uBoxCutSizePlus, 0) - parseNumeric(uBoxCutSizeMinus, 0);
+      const reelMult = parseNumeric(uBoxReelMultiplier, 1);
+      const cutMult = parseNumeric(uBoxCutMultiplier, 1);
       const computed = calculateTopSideTrayBoxPricing({
         L: convertToInches(selectedSize.length_inches, selectedSize.unit), W: convertToInches(selectedSize.width_inches, selectedSize.unit), H: convertToInches(selectedSize.height_inches, selectedSize.unit),
         flabL: Number(uBoxFlabL), flabW: Number(uBoxFlabW),
         qtyBoxes: Number(uBoxQty), plyType: Number(uBoxPlyType),
         fluteExtraPercent: Number(uBoxFluteExtraPercent), pricePerKg: 0,
         qtyData: Number(uBoxQtyData), gstPercent: 0,
-        reelSizeAdjust: netReel,
-        cutSizeAdjust: netCut,
+        reelSizeAdjust: reelMult > 0 ? netReel / reelMult : netReel,
+        cutSizeAdjust: cutMult > 0 ? netCut / cutMult : netCut,
         gsmPaper: Number(uBoxGsmPaper), gsmFlute: Number(uBoxGsmFlute), gsmPacking: uBoxHasPacking ? Number(uBoxGsmPacking) : 0
       });
       setUBoxResults({
         ...computed,
-        uBoxLengthPackingPaperCount: uBoxHasPacking ? Number(uBoxQty) * 2 * 1 : 0,
-        uBoxLengthLinerCount: Number(uBoxQty) * 2 * ((Number(uBoxPlyType) - 1) / 2),
-        uBoxWidthPackingPaperCount: uBoxHasPacking ? Number(uBoxQty) * 2 * 1 : 0,
-        uBoxWidthLinerCount: Number(uBoxQty) * 2 * ((Number(uBoxPlyType) - 1) / 2),
+        uBoxLengthPackingPaperCount: uBoxHasPacking ? parseNumeric(uBoxQty, 0) * 2 * parseNumeric(uBoxQtyData, 1) * 1 : 0,
+        uBoxLengthLinerCount: parseNumeric(uBoxQty, 0) * 2 * parseNumeric(uBoxQtyData, 1) * ((parseNumeric(uBoxPlyType, 3) - 1) / 2),
+        uBoxWidthPackingPaperCount: uBoxHasPacking ? parseNumeric(uBoxQty, 0) * 2 * parseNumeric(uBoxQtyData, 1) * 1 : 0,
+        uBoxWidthLinerCount: parseNumeric(uBoxQty, 0) * 2 * parseNumeric(uBoxQtyData, 1) * ((parseNumeric(uBoxPlyType, 3) - 1) / 2),
         selectedSize
       });
     } catch (e) { console.error('Top Side Tray Box calculation error:', e); setUBoxResults(null); }
-  }, [uBoxSizeId, uBoxSizes, uBoxQty, uBoxPlyType, uBoxFluteExtraPercent, uBoxQtyData, uBoxReelSizePlus, uBoxReelSizeMinus, uBoxCutSizePlus, uBoxCutSizeMinus, uBoxFlabL, uBoxFlabW, uBoxGsmPaper, uBoxGsmFlute, uBoxGsmPacking, uBoxHasPacking]);
+  }, [uBoxSizeId, uBoxSizes, uBoxQty, uBoxPlyType, uBoxFluteExtraPercent, uBoxQtyData, uBoxReelSizePlus, uBoxReelSizeMinus, uBoxCutSizePlus, uBoxCutSizeMinus, uBoxReelMultiplier, uBoxCutMultiplier, uBoxFlabL, uBoxFlabW, uBoxGsmPaper, uBoxGsmFlute, uBoxGsmPacking, uBoxHasPacking]);
 
   // Universal Type live calculation
   useEffect(() => {
@@ -1557,25 +1571,27 @@ export default function Production() {
     try {
       const netReel = parseNumeric(uTypeReelSizePlus, 0) - parseNumeric(uTypeReelSizeMinus, 0);
       const netCut = parseNumeric(uTypeCutSizePlus, 0) - parseNumeric(uTypeCutSizeMinus, 0);
+      const reelMult = parseNumeric(uTypeReelMultiplier, 1);
+      const cutMult = parseNumeric(uTypeCutMultiplier, 1);
       const computed = calculateUniversalTypePricing({
         L: convertToInches(selectedSize.length_inches, selectedSize.unit), W: convertToInches(selectedSize.width_inches, selectedSize.unit), H: convertToInches(selectedSize.height_inches, selectedSize.unit),
         qtyBoxes: Number(uTypeQty), plyType: Number(uTypePlyType),
         fluteExtraPercent: Number(uTypeFluteExtraPercent), pricePerKg: 0,
         qtyData: Number(uTypeQtyData), gstPercent: 0,
-        reelSizeAdjust: netReel,
-        cutSizeAdjust: netCut,
+        reelSizeAdjust: reelMult > 0 ? netReel / reelMult : netReel,
+        cutSizeAdjust: cutMult > 0 ? netCut / cutMult : netCut,
         gsmPaper: Number(uTypeGsmPaper), gsmFlute: Number(uTypeGsmFlute), gsmPacking: uTypeHasPacking ? Number(uTypeGsmPacking) : 0
       });
       setUTypeResults({
         ...computed,
-        topPackingPaperCount: uTypeHasPacking ? Number(uTypeQty) * 1 : 0,
-        topLinerCount: Number(uTypeQty) * ((Number(uTypePlyType) - 1) / 2),
-        bottomPackingPaperCount: uTypeHasPacking ? Number(uTypeQty) * 1 : 0,
-        bottomLinerCount: Number(uTypeQty) * ((Number(uTypePlyType) - 1) / 2),
+        topPackingPaperCount: uTypeHasPacking ? parseNumeric(uTypeQty, 0) * parseNumeric(uTypeQtyData, 1) * 1 : 0,
+        topLinerCount: parseNumeric(uTypeQty, 0) * parseNumeric(uTypeQtyData, 1) * ((parseNumeric(uTypePlyType, 3) - 1) / 2),
+        bottomPackingPaperCount: uTypeHasPacking ? parseNumeric(uTypeQty, 0) * parseNumeric(uTypeQtyData, 1) * 1 : 0,
+        bottomLinerCount: parseNumeric(uTypeQty, 0) * parseNumeric(uTypeQtyData, 1) * ((parseNumeric(uTypePlyType, 3) - 1) / 2),
         selectedSize
       });
     } catch (e) { console.error('Universal Type calculation error:', e); setUTypeResults(null); }
-  }, [uTypeSizeId, uTypeSizes, uTypeQty, uTypePlyType, uTypeFluteExtraPercent, uTypeQtyData, uTypeReelSizePlus, uTypeReelSizeMinus, uTypeCutSizePlus, uTypeCutSizeMinus, uTypeGsmPaper, uTypeGsmFlute, uTypeGsmPacking, uTypeHasPacking]);
+  }, [uTypeSizeId, uTypeSizes, uTypeQty, uTypePlyType, uTypeFluteExtraPercent, uTypeQtyData, uTypeReelSizePlus, uTypeReelSizeMinus, uTypeCutSizePlus, uTypeCutSizeMinus, uTypeReelMultiplier, uTypeCutMultiplier, uTypeGsmPaper, uTypeGsmFlute, uTypeGsmPacking, uTypeHasPacking]);
 
   // Fetch Full Closing Box sizes when fcBoxCompanyId changes
   useEffect(() => {
@@ -1621,23 +1637,25 @@ export default function Production() {
     try {
       const netReel = parseNumeric(fcBoxReelSizePlus, 0) - parseNumeric(fcBoxReelSizeMinus, 0);
       const netCut = parseNumeric(fcBoxCutSizePlus, 0) - parseNumeric(fcBoxCutSizeMinus, 0);
+      const reelMult = parseNumeric(fcBoxReelMultiplier, 1);
+      const cutMult = parseNumeric(fcBoxCutMultiplier, 1);
       const computed = calculateFullClosingBoxPricing({
         L: convertToInches(selectedSize.length_inches, selectedSize.unit), W: convertToInches(selectedSize.width_inches, selectedSize.unit), H: convertToInches(selectedSize.height_inches, selectedSize.unit),
         qtyBoxes: parseNumeric(fcBoxQtyBoxes, 0), plyType: parseNumeric(fcBoxPlyType, 5),
         fluteExtraPercent: parseNumeric(fcBoxFluteExtraPercent, 45), pricePerKg: 0,
         qtyData: parseNumeric(fcBoxQtyData, 2), gstPercent: 0,
-        reelSizeAdjust: netReel,
-        cutSizeAdjust: netCut,
+        reelSizeAdjust: reelMult > 0 ? netReel / reelMult : netReel,
+        cutSizeAdjust: cutMult > 0 ? netCut / cutMult : netCut,
         gsmPaper: parseNumeric(fcBoxGsmPaper, 150), gsmFlute: parseNumeric(fcBoxGsmFlute, 150), gsmPacking: fcBoxHasPacking ? parseNumeric(fcBoxGsmPacking, 150) : 0
       });
       setFcBoxResults({
         ...computed,
-        packingPaperCount: fcBoxHasPacking ? parseNumeric(fcBoxQtyBoxes, 0) * 1 : 0,
-        linerCount: parseNumeric(fcBoxQtyBoxes, 0) * ((parseNumeric(fcBoxPlyType, 5) - 1) / 2),
+        packingPaperCount: fcBoxHasPacking ? parseNumeric(fcBoxQtyBoxes, 0) * parseNumeric(fcBoxQtyData, 1) * 1 : 0,
+        linerCount: parseNumeric(fcBoxQtyBoxes, 0) * parseNumeric(fcBoxQtyData, 1) * ((parseNumeric(fcBoxPlyType, 5) - 1) / 2),
         selectedSize
       });
     } catch (e) { console.error('Full Closing Box calculation error:', e); setFcBoxResults(null); }
-  }, [fcBoxSizeId, fcBoxSizes, fcBoxQtyBoxes, fcBoxPlyType, fcBoxFluteExtraPercent, fcBoxQtyData, fcBoxReelSizePlus, fcBoxReelSizeMinus, fcBoxCutSizePlus, fcBoxCutSizeMinus, fcBoxGsmPaper, fcBoxGsmFlute, fcBoxGsmPacking, fcBoxHasPacking]);
+  }, [fcBoxSizeId, fcBoxSizes, fcBoxQtyBoxes, fcBoxPlyType, fcBoxFluteExtraPercent, fcBoxQtyData, fcBoxReelSizePlus, fcBoxReelSizeMinus, fcBoxCutSizePlus, fcBoxCutSizeMinus, fcBoxReelMultiplier, fcBoxCutMultiplier, fcBoxGsmPaper, fcBoxGsmFlute, fcBoxGsmPacking, fcBoxHasPacking]);
 
   const handleFcBoxSave = async (e, isSaveAsNew = false) => {
     if (e && e.preventDefault) e.preventDefault();
@@ -1654,7 +1672,8 @@ export default function Production() {
       setFcBoxSaving(true);
       const netReelFc = parseNumeric(fcBoxReelSizePlus, 0) - parseNumeric(fcBoxReelSizeMinus, 0);
       const netCutFc = parseNumeric(fcBoxCutSizePlus, 0) - parseNumeric(fcBoxCutSizeMinus, 0);
-      const namePayload = JSON.stringify({ pOption: fcBoxHasPacking ? fcBoxPackingOption : '-', lOption: fcBoxLinerOption, ref: fcBoxCustomerName || 'Full Closing Box Production', reelMultiplier: fcBoxReelMultiplier, cutMultiplier: fcBoxCutMultiplier, sizeMultiplier: fcBoxReelMultiplier * fcBoxCutMultiplier, productionFile: finalFileName, isFullClosingBox: true, dateOfFinish: fcBoxDateOfFinish || '' });
+      const fcBoxMult = (parseNumeric(fcBoxReelMultiplier, 1) * parseNumeric(fcBoxCutMultiplier, 1)) || 1;
+      const namePayload = JSON.stringify({ pOption: fcBoxHasPacking ? fcBoxPackingOption : '-', lOption: fcBoxLinerOption, ref: fcBoxCustomerName || 'Full Closing Box Production', reelMultiplier: fcBoxReelMultiplier, cutMultiplier: fcBoxCutMultiplier, sizeMultiplier: fcBoxMult, productionFile: finalFileName, isFullClosingBox: true, isPreDivided: true, dateOfFinish: fcBoxDateOfFinish || '', packingPaperCount: fcBoxResults ? Math.ceil(fcBoxResults.packingPaperCount / fcBoxMult) : 0, linerCount: fcBoxResults ? Math.ceil(fcBoxResults.linerCount / fcBoxMult) : 0 });
       const payload = {
         company_id: fcBoxCompanyId, size_id: fcBoxSizeId, customer_name: namePayload,
         quantity_of_boxes: Number(fcBoxQtyBoxes), ply_type: Number(fcBoxPlyType), flute_extra_percent: Number(fcBoxFluteExtraPercent),
@@ -1695,22 +1714,25 @@ export default function Production() {
     try {
       const netReel = parseNumeric(reelSizePlus, 0) - parseNumeric(reelSizeMinus, 0);
       const netCut = parseNumeric(cutSizePlus, 0) - parseNumeric(cutSizeMinus, 0);
+      const reelMult = parseNumeric(reelMultiplier, 1);
+      const cutMult = parseNumeric(cutMultiplier, 1);
       const computed = calculateBoxPricing({
         L: convertToInches(selectedSize.length_inches, selectedSize.unit), W: convertToInches(selectedSize.width_inches, selectedSize.unit), H: convertToInches(selectedSize.height_inches, selectedSize.unit),
         qtyBoxes: parseNumeric(qtyBoxes, 0), plyType: parseNumeric(plyType, 5),
         fluteExtraPercent: parseNumeric(fluteExtraPercent, 45), pricePerKg: 0,
         qtyData: parseNumeric(qtyData, 2), gstPercent: 0,
-        reelSizeAdjust: netReel, cutSizeAdjust: netCut,
+        reelSizeAdjust: reelMult > 0 ? netReel / reelMult : netReel,
+        cutSizeAdjust: cutMult > 0 ? netCut / cutMult : netCut,
         gsmPaper: parseNumeric(gsmPaper, 150), gsmFlute: parseNumeric(gsmFlute, 150), gsmPacking: hasPacking ? parseNumeric(gsmPacking, 150) : 0
       });
       setResults({
         ...computed,
-        packingPaperCount: hasPacking ? parseNumeric(qtyBoxes, 0) * 1 : 0,
-        linerCount: parseNumeric(qtyBoxes, 0) * ((parseNumeric(plyType, 5) - 1) / 2),
+        packingPaperCount: hasPacking ? parseNumeric(qtyBoxes, 0) * parseNumeric(qtyData, 1) * 1 : 0,
+        linerCount: parseNumeric(qtyBoxes, 0) * parseNumeric(qtyData, 1) * ((parseNumeric(plyType, 5) - 1) / 2),
         selectedSize
       });
     } catch (e) { console.error('Calculation error:', e); setResults(null); }
-  }, [sizeId, sizes, qtyBoxes, plyType, fluteExtraPercent, qtyData, reelSizePlus, reelSizeMinus, cutSizePlus, cutSizeMinus, gsmPaper, gsmFlute, gsmPacking, hasPacking]);
+  }, [sizeId, sizes, qtyBoxes, plyType, fluteExtraPercent, qtyData, reelSizePlus, reelSizeMinus, cutSizePlus, cutSizeMinus, reelMultiplier, cutMultiplier, gsmPaper, gsmFlute, gsmPacking, hasPacking]);
 
   const handleSave = async (e, isSaveAsNew = false) => {
     e.preventDefault();
@@ -1725,7 +1747,8 @@ export default function Production() {
     setSaving(true); setError('');
     const netReelBox = parseNumeric(reelSizePlus, 0) - parseNumeric(reelSizeMinus, 0);
     const netCutBox = parseNumeric(cutSizePlus, 0) - parseNumeric(cutSizeMinus, 0);
-    const namePayload = JSON.stringify({ pOption: hasPacking ? packingOption : '-', lOption: linerOption, ref: customerName || 'Standard Box Production', reelMultiplier, cutMultiplier, sizeMultiplier: reelMultiplier * cutMultiplier, productionFile: finalFileName, dateOfFinish: dateOfFinish || '' });
+    const totalMultBox = (parseNumeric(reelMultiplier, 1) * parseNumeric(cutMultiplier, 1)) || 1;
+    const namePayload = JSON.stringify({ pOption: hasPacking ? packingOption : '-', lOption: linerOption, ref: customerName || 'Standard Box Production', reelMultiplier, cutMultiplier, sizeMultiplier: totalMultBox, productionFile: finalFileName, isPreDivided: true, dateOfFinish: dateOfFinish || '', packingPaperCount: results ? Math.ceil(results.packingPaperCount / totalMultBox) : 0, linerCount: results ? Math.ceil(results.linerCount / totalMultBox) : 0 });
     const payload = {
       company_id: companyId, size_id: sizeId, customer_name: namePayload,
       quantity_of_boxes: Number(qtyBoxes), ply_type: Number(plyType), flute_extra_percent: Number(fluteExtraPercent),
@@ -1774,7 +1797,8 @@ export default function Production() {
     setPadSaving(true); setPadError('');
     const netReelPad = parseNumeric(padReelSizePlus, 0) - parseNumeric(padReelSizeMinus, 0);
     const netCutPad = parseNumeric(padCutSizePlus, 0) - parseNumeric(padCutSizeMinus, 0);
-    const namePayload = JSON.stringify({ pOption: padHasPacking ? padPackingOption : '-', lOption: padLinerOption, ref: padCustomerName || 'Pad Production', reelMultiplier: padReelMultiplier, cutMultiplier: padCutMultiplier, sizeMultiplier: padReelMultiplier * padCutMultiplier, productionFile: finalFileName, isPad: true, dateOfFinish: padDateOfFinish || '', packingPaperCount: padHasPacking ? Number(padQtyPads) : 0 });
+    const totalMultPad = (parseNumeric(padReelMultiplier, 1) * parseNumeric(padCutMultiplier, 1)) || 1;
+    const namePayload = JSON.stringify({ pOption: padHasPacking ? padPackingOption : '-', lOption: padLinerOption, ref: padCustomerName || 'Pad Production', reelMultiplier: padReelMultiplier, cutMultiplier: padCutMultiplier, sizeMultiplier: totalMultPad, productionFile: finalFileName, isPad: true, isPreDivided: true, dateOfFinish: padDateOfFinish || '', packingPaperCount: padResults ? Math.ceil(padResults.padPackingPaperCount / totalMultPad) : 0, linerCount: padResults ? Math.ceil(padResults.padLinerCount / totalMultPad) : 0 });
     const payload = {
       company_id: padCompanyId, size_id: padSizeId, customer_name: namePayload,
       quantity_of_boxes: Number(padQtyPads), ply_type: Number(padPlyType), flute_extra_percent: Number(padFluteExtraPercent),
@@ -1837,19 +1861,21 @@ export default function Production() {
       dateOfFinish: partitionDateOfFinish || ''
     };
 
+    const partMult = parseNumeric(partitionQtyData, 1);
+
     if (partitionResults.isPaired) {
       metaObj.p1ReelCut = `${(partitionResults.first.reelSize * partitionReelMultiplier).toFixed(2)} × ${(partitionResults.first.cutSize * partitionCutMultiplier).toFixed(2)}`;
       metaObj.p2ReelCut = `${(partitionResults.second.reelSize * partitionReelMultiplier).toFixed(2)} × ${(partitionResults.second.cutSize * partitionCutMultiplier).toFixed(2)}`;
       
-      metaObj.p1Packing = partitionHasPacking ? Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * Number(partitionResults.first.usedSlot)) / totalMult) : 0;
-      metaObj.p1Liner = Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * Number(partitionResults.first.usedSlot) * linerPlies) / totalMult);
-      metaObj.p1DefaultPacking = partitionHasPacking ? Math.ceil((Number(partitionQtyPads) * 1 * Number(partitionResults.first.usedSlot)) / totalMult) : 0;
-      metaObj.p1DefaultLiner = Math.ceil((Number(partitionQtyPads) * 1 * Number(partitionResults.first.usedSlot) * linerPlies) / totalMult);
+      metaObj.p1Packing = partitionHasPacking ? Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * partMult * Number(partitionResults.first.usedSlot)) / totalMult) : 0;
+      metaObj.p1Liner = Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * partMult * Number(partitionResults.first.usedSlot) * linerPlies) / totalMult);
+      metaObj.p1DefaultPacking = partitionHasPacking ? Math.ceil((Number(partitionQtyPads) * 1 * partMult * Number(partitionResults.first.usedSlot)) / totalMult) : 0;
+      metaObj.p1DefaultLiner = Math.ceil((Number(partitionQtyPads) * 1 * partMult * Number(partitionResults.first.usedSlot) * linerPlies) / totalMult);
 
-      metaObj.p2Packing = partitionHasPacking ? Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * Number(partitionResults.second.usedSlot)) / totalMult) : 0;
-      metaObj.p2Liner = Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * Number(partitionResults.second.usedSlot) * linerPlies) / totalMult);
-      metaObj.p2DefaultPacking = partitionHasPacking ? Math.ceil((Number(partitionQtyPads) * 1 * Number(partitionResults.second.usedSlot)) / totalMult) : 0;
-      metaObj.p2DefaultLiner = Math.ceil((Number(partitionQtyPads) * 1 * Number(partitionResults.second.usedSlot) * linerPlies) / totalMult);
+      metaObj.p2Packing = partitionHasPacking ? Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * partMult * Number(partitionResults.second.usedSlot)) / totalMult) : 0;
+      metaObj.p2Liner = Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * partMult * Number(partitionResults.second.usedSlot) * linerPlies) / totalMult);
+      metaObj.p2DefaultPacking = partitionHasPacking ? Math.ceil((Number(partitionQtyPads) * 1 * partMult * Number(partitionResults.second.usedSlot)) / totalMult) : 0;
+      metaObj.p2DefaultLiner = Math.ceil((Number(partitionQtyPads) * 1 * partMult * Number(partitionResults.second.usedSlot) * linerPlies) / totalMult);
 
       if (selectedOption?.first) {
         const fLIn = convertToInches(selectedOption.first.length_inches, selectedOption.first.unit);
@@ -1863,7 +1889,11 @@ export default function Production() {
         metaObj.p2SizeMM = `${Math.round(sLIn * 25.4)} × ${Math.round(sWIn * 25.4)}`;
         metaObj.p2SizeInch = `${sLIn.toFixed(2)} × ${sWIn.toFixed(2)}`;
       }
+    } else {
+      metaObj.packingPaperCount = partitionResults ? Math.ceil(partitionResults.padPackingPaperCount / totalMult) : 0;
+      metaObj.linerCount = partitionResults ? Math.ceil(partitionResults.padLinerCount / totalMult) : 0;
     }
+    metaObj.isPreDivided = true;
 
     const namePayload = JSON.stringify(metaObj);
 
@@ -1968,7 +1998,8 @@ export default function Production() {
     setTraySaving(true); setTrayError('');
     const netReelTray = parseNumeric(trayReelSizePlus, 0) - parseNumeric(trayReelSizeMinus, 0);
     const netCutTray = parseNumeric(trayCutSizePlus, 0) - parseNumeric(trayCutSizeMinus, 0);
-    const namePayload = JSON.stringify({ pOption: trayHasPacking ? trayPackingOption : '-', lOption: trayLinerOption, ref: trayCustomerName || 'Tray Production', reelMultiplier: trayReelMultiplier, cutMultiplier: trayCutMultiplier, sizeMultiplier: trayReelMultiplier * trayCutMultiplier, productionFile: finalFileName, isTray: true, dateOfFinish: trayDateOfFinish || '' });
+    const totalMultTray = (parseNumeric(trayReelMultiplier, 1) * parseNumeric(trayCutMultiplier, 1)) || 1;
+    const namePayload = JSON.stringify({ pOption: trayHasPacking ? trayPackingOption : '-', lOption: trayLinerOption, ref: trayCustomerName || 'Tray Production', reelMultiplier: trayReelMultiplier, cutMultiplier: trayCutMultiplier, sizeMultiplier: totalMultTray, productionFile: finalFileName, isTray: true, isPreDivided: true, dateOfFinish: trayDateOfFinish || '', packingPaperCount: trayResults ? Math.ceil(trayResults.trayPackingPaperCount / totalMultTray) : 0, linerCount: trayResults ? Math.ceil(trayResults.trayLinerCount / totalMultTray) : 0 });
     const payload = {
       company_id: trayCompanyId, size_id: traySizeId, customer_name: namePayload,
       quantity_of_boxes: Number(trayQtyTrays), ply_type: Number(trayPlyType), flute_extra_percent: Number(trayFluteExtraPercent),
@@ -2014,7 +2045,8 @@ export default function Production() {
     const netCutSlv = parseNumeric(sleaveCutSizePlus, 0) - parseNumeric(sleaveCutSizeMinus, 0);
     const lReelCutSlv = `${(sleaveResults.calcHeight * sleaveReelMultiplier).toFixed(2)} × ${(sleaveResults.calcLength * sleaveCutMultiplier).toFixed(2)}`;
     const wReelCutSlv = `${(sleaveResults.calcHeight * sleaveReelMultiplier).toFixed(2)} × ${(sleaveResults.calcWidth * sleaveCutMultiplier).toFixed(2)}`;
-    const namePayload = JSON.stringify({ pOption: sleaveHasPacking ? sleavePackingOption : '-', lOption: sleaveLinerOption, ref: sleaveCustomerName || 'Sleave Production', reelMultiplier: sleaveReelMultiplier, cutMultiplier: sleaveCutMultiplier, sizeMultiplier: sleaveReelMultiplier * sleaveCutMultiplier, productionFile: finalFileName, isSleave: true, flabL: sleaveFlabL, flabW: sleaveFlabW, lengthReelCut: lReelCutSlv, widthReelCut: wReelCutSlv, dateOfFinish: sleaveDateOfFinish || '' });
+    const totalMultSlv = (parseNumeric(sleaveReelMultiplier, 1) * parseNumeric(sleaveCutMultiplier, 1)) || 1;
+    const namePayload = JSON.stringify({ pOption: sleaveHasPacking ? sleavePackingOption : '-', lOption: sleaveLinerOption, ref: sleaveCustomerName || 'Sleave Production', reelMultiplier: sleaveReelMultiplier, cutMultiplier: sleaveCutMultiplier, sizeMultiplier: totalMultSlv, productionFile: finalFileName, isSleave: true, isPreDivided: true, flabL: sleaveFlabL, flabW: sleaveFlabW, lengthReelCut: lReelCutSlv, widthReelCut: wReelCutSlv, dateOfFinish: sleaveDateOfFinish || '', lengthPackingPaperCount: sleaveResults ? Math.ceil(sleaveResults.sleaveLengthPackingPaperCount / totalMultSlv) : 0, lengthLinerCount: sleaveResults ? Math.ceil(sleaveResults.sleaveLengthLinerCount / totalMultSlv) : 0, widthPackingPaperCount: sleaveResults ? Math.ceil(sleaveResults.sleaveWidthPackingPaperCount / totalMultSlv) : 0, widthLinerCount: sleaveResults ? Math.ceil(sleaveResults.sleaveWidthLinerCount / totalMultSlv) : 0 });
     const payload = {
       company_id: sleaveCompanyId, size_id: sleaveSizeId, customer_name: namePayload,
       quantity_of_boxes: Number(sleaveQty), ply_type: Number(sleavePlyType), flute_extra_percent: Number(sleaveFluteExtraPercent),
@@ -2060,7 +2092,8 @@ export default function Production() {
     const netCutCol = parseNumeric(collerBoxCutSizePlus, 0) - parseNumeric(collerBoxCutSizeMinus, 0);
     const lReelCutCol = `${(collerBoxResults.calcHeight * collerBoxReelMultiplier).toFixed(2)} × ${(collerBoxResults.calcLength * collerBoxCutMultiplier).toFixed(2)}`;
     const wReelCutCol = `${(collerBoxResults.calcHeight * collerBoxReelMultiplier).toFixed(2)} × ${(collerBoxResults.calcWidth * collerBoxCutMultiplier).toFixed(2)}`;
-    const namePayload = JSON.stringify({ pOption: collerBoxHasPacking ? collerBoxPackingOption : '-', lOption: collerBoxLinerOption, ref: collerBoxCustomerName || 'Coller Box Production', reelMultiplier: collerBoxReelMultiplier, cutMultiplier: collerBoxCutMultiplier, sizeMultiplier: collerBoxReelMultiplier * collerBoxCutMultiplier, productionFile: finalFileName, isCollerBox: true, flabL: collerBoxFlabL, flabW: collerBoxFlabW, lengthReelCut: lReelCutCol, widthReelCut: wReelCutCol, dateOfFinish: collerBoxDateOfFinish || '' });
+    const totalMultCol = (parseNumeric(collerBoxReelMultiplier, 1) * parseNumeric(collerBoxCutMultiplier, 1)) || 1;
+    const namePayload = JSON.stringify({ pOption: collerBoxHasPacking ? collerBoxPackingOption : '-', lOption: collerBoxLinerOption, ref: collerBoxCustomerName || 'Coller Box Production', reelMultiplier: collerBoxReelMultiplier, cutMultiplier: collerBoxCutMultiplier, sizeMultiplier: totalMultCol, productionFile: finalFileName, isCollerBox: true, isPreDivided: true, flabL: collerBoxFlabL, flabW: collerBoxFlabW, lengthReelCut: lReelCutCol, widthReelCut: wReelCutCol, dateOfFinish: collerBoxDateOfFinish || '', lengthPackingPaperCount: collerBoxResults ? Math.ceil(collerBoxResults.collerBoxLengthPackingPaperCount / totalMultCol) : 0, lengthLinerCount: collerBoxResults ? Math.ceil(collerBoxResults.collerBoxLengthLinerCount / totalMultCol) : 0, widthPackingPaperCount: collerBoxResults ? Math.ceil(collerBoxResults.collerBoxWidthPackingPaperCount / totalMultCol) : 0, widthLinerCount: collerBoxResults ? Math.ceil(collerBoxResults.collerBoxWidthLinerCount / totalMultCol) : 0 });
     const payload = {
       company_id: collerBoxCompanyId, size_id: collerBoxSizeId, customer_name: namePayload,
       quantity_of_boxes: Number(collerBoxQty), ply_type: Number(collerBoxPlyType), flute_extra_percent: Number(collerBoxFluteExtraPercent),
@@ -2106,7 +2139,8 @@ export default function Production() {
     const netCutUBox = parseNumeric(uBoxCutSizePlus, 0) - parseNumeric(uBoxCutSizeMinus, 0);
     const lReelCutUBox = `${(uBoxResults.calcHeight * uBoxReelMultiplier).toFixed(2)} × ${(uBoxResults.calcLength * uBoxCutMultiplier).toFixed(2)}`;
     const wReelCutUBox = `${(uBoxResults.calcHeight * uBoxReelMultiplier).toFixed(2)} × ${(uBoxResults.calcWidth * uBoxCutMultiplier).toFixed(2)}`;
-    const namePayload = JSON.stringify({ pOption: uBoxHasPacking ? uBoxPackingOption : '-', lOption: uBoxLinerOption, ref: uBoxCustomerName || 'Top Side Tray Box Production', reelMultiplier: uBoxReelMultiplier, cutMultiplier: uBoxCutMultiplier, sizeMultiplier: uBoxReelMultiplier * uBoxCutMultiplier, productionFile: finalFileName, isTopSideTrayBox: true, flabL: uBoxFlabL, flabW: uBoxFlabW, lengthReelCut: lReelCutUBox, widthReelCut: wReelCutUBox, dateOfFinish: uBoxDateOfFinish || '' });
+    const totalMultUBox = (parseNumeric(uBoxReelMultiplier, 1) * parseNumeric(uBoxCutMultiplier, 1)) || 1;
+    const namePayload = JSON.stringify({ pOption: uBoxHasPacking ? uBoxPackingOption : '-', lOption: uBoxLinerOption, ref: uBoxCustomerName || 'Top Side Tray Box Production', reelMultiplier: uBoxReelMultiplier, cutMultiplier: uBoxCutMultiplier, sizeMultiplier: totalMultUBox, productionFile: finalFileName, isTopSideTrayBox: true, isPreDivided: true, flabL: uBoxFlabL, flabW: uBoxFlabW, lengthReelCut: lReelCutUBox, widthReelCut: wReelCutUBox, dateOfFinish: uBoxDateOfFinish || '', lengthPackingPaperCount: uBoxResults ? Math.ceil(uBoxResults.uBoxLengthPackingPaperCount / totalMultUBox) : 0, lengthLinerCount: uBoxResults ? Math.ceil(uBoxResults.uBoxLengthLinerCount / totalMultUBox) : 0, widthPackingPaperCount: uBoxResults ? Math.ceil(uBoxResults.uBoxWidthPackingPaperCount / totalMultUBox) : 0, widthLinerCount: uBoxResults ? Math.ceil(uBoxResults.uBoxWidthLinerCount / totalMultUBox) : 0 });
     const payload = {
       company_id: uBoxCompanyId, size_id: uBoxSizeId, customer_name: namePayload,
       quantity_of_boxes: Number(uBoxQty), ply_type: Number(uBoxPlyType), flute_extra_percent: Number(uBoxFluteExtraPercent),
@@ -2152,7 +2186,8 @@ export default function Production() {
     const netCutUType = parseNumeric(uTypeCutSizePlus, 0) - parseNumeric(uTypeCutSizeMinus, 0);
     const tReelCutUType = `${((uTypeResults.reelSize + 0.5) * uTypeReelMultiplier).toFixed(2)} × ${((uTypeResults.cutSize + 0.5) * uTypeCutMultiplier).toFixed(2)}`;
     const bReelCutUType = `${(uTypeResults.reelSize * uTypeReelMultiplier).toFixed(2)} × ${(uTypeResults.cutSize * uTypeCutMultiplier).toFixed(2)}`;
-    const namePayload = JSON.stringify({ pOption: uTypeHasPacking ? uTypePackingOption : '-', lOption: uTypeLinerOption, ref: uTypeCustomerName || 'Universal Type Production', reelMultiplier: uTypeReelMultiplier, cutMultiplier: uTypeCutMultiplier, sizeMultiplier: uTypeReelMultiplier * uTypeCutMultiplier, productionFile: finalFileName, isUniversalType: true, topReelCut: tReelCutUType, bottomReelCut: bReelCutUType, dateOfFinish: uTypeDateOfFinish || '' });
+    const totalMultUType = (parseNumeric(uTypeReelMultiplier, 1) * parseNumeric(uTypeCutMultiplier, 1)) || 1;
+    const namePayload = JSON.stringify({ pOption: uTypeHasPacking ? uTypePackingOption : '-', lOption: uTypeLinerOption, ref: uTypeCustomerName || 'Universal Type Production', reelMultiplier: uTypeReelMultiplier, cutMultiplier: uTypeCutMultiplier, sizeMultiplier: uTypeReelMultiplier * uTypeCutMultiplier, productionFile: finalFileName, isUniversalType: true, isPreDivided: true, topReelCut: tReelCutUType, bottomReelCut: bReelCutUType, dateOfFinish: uTypeDateOfFinish || '', topPackingPaperCount: uTypeResults ? Math.ceil(uTypeResults.topPackingPaperCount / totalMultUType) : 0, topLinerCount: uTypeResults ? Math.ceil(uTypeResults.topLinerCount / totalMultUType) : 0, bottomPackingPaperCount: uTypeResults ? Math.ceil(uTypeResults.bottomPackingPaperCount / totalMultUType) : 0, bottomLinerCount: uTypeResults ? Math.ceil(uTypeResults.bottomLinerCount / totalMultUType) : 0 });
     const payload = {
       company_id: uTypeCompanyId, size_id: uTypeSizeId, customer_name: namePayload,
       quantity_of_boxes: Number(uTypeQty), ply_type: Number(uTypePlyType), flute_extra_percent: Number(uTypeFluteExtraPercent),
@@ -2335,42 +2370,11 @@ export default function Production() {
                     <h3 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', marginBottom: '12px' }}>📐 Calculated Sizing</h3>
                     {renderConvertedSizeDisplay(results.selectedSize, true)}
                     <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Size in Inch (Reel × Cut)</div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '4px' }}>
-                      {(() => {
-                        const sizeOptions = [
-                          { label: 'Normal (1× Reel, 1× Cut)', reel: 1, cut: 1 },
-                          { label: 'Double Reel (2× Reel, 1× Cut)', reel: 2, cut: 1 },
-                          { label: 'Triple Reel (3× Reel, 1× Cut)', reel: 3, cut: 1 },
-                          { label: 'Double Cut (1× Reel, 2× Cut)', reel: 1, cut: 2 },
-                          { label: 'Double Reel & Double Cut (2× Reel, 2× Cut)', reel: 2, cut: 2 },
-                          { label: 'Triple Reel & Double Cut (3× Reel, 2× Cut)', reel: 3, cut: 2 },
-                        ];
-                        const activeOption = sizeOptions.find(opt => opt.reel === reelMultiplier && opt.cut === cutMultiplier) || sizeOptions[0];
-                        return (
-                          <>
-                            <button type="button" onClick={() => setShowSizeDropdown(!showSizeDropdown)} style={{ width: '100%', padding: '12px 16px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', fontWeight: '700', marginBottom: '4px', transition: 'all 0.2s' }}>
-                              <span style={{ fontSize: '0.85rem' }}>{activeOption.label.split(' (')[0]}: {(results.reelSize * reelMultiplier).toFixed(2)} × {(results.cutSize * cutMultiplier).toFixed(2)} in</span>
-                              {showSizeDropdown ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                            </button>
-                            {showSizeDropdown && (
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '180px', overflowY: 'auto', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '8px', backgroundColor: 'var(--bg-tertiary)', zIndex: 10 }} className="animate-fade">
-                                {sizeOptions.map(opt => {
-                                  const displayReel = (results.reelSize * opt.reel).toFixed(2);
-                                  const displayCut = (results.cutSize * opt.cut).toFixed(2);
-                                  const isSelected = reelMultiplier === opt.reel && cutMultiplier === opt.cut;
-                                  return (
-                                    <button key={`${opt.reel}-${opt.cut}`} type="button" onClick={() => { setReelMultiplier(opt.reel); setCutMultiplier(opt.cut); setShowSizeDropdown(false); }} style={{ padding: '10px 12px', borderRadius: 'var(--radius-sm)', cursor: 'pointer', border: isSelected ? '1px solid var(--color-accent)' : '1px solid transparent', background: isSelected ? 'rgba(99, 102, 241, 0.15)' : 'var(--bg-secondary)', color: isSelected ? 'var(--color-accent)' : 'var(--text-primary)', transition: 'all 0.2s ease', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                      <span style={{ fontSize: '0.8rem', fontWeight: '600' }}>{opt.label}</span>
-                                      <span style={{ fontSize: '0.85rem', fontWeight: '700' }}>{displayReel} × {displayCut} in</span>
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </>
-                        );
-                      })()}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '4px' }}>
+                      <div><label style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Reel Multiply</label><input type="number" value={reelMultiplier} onWheel={e => e.target.blur()} onChange={e => setReelMultiplier(Math.max(1, parseFloat(e.target.value) || 1))} className="form-control" min="1" step="1" style={{ padding: '8px 10px', fontSize: '0.9rem', fontWeight: '700' }} /></div>
+                      <div><label style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Cut Multiply</label><input type="number" value={cutMultiplier} onWheel={e => e.target.blur()} onChange={e => setCutMultiplier(Math.max(1, parseFloat(e.target.value) || 1))} className="form-control" min="1" step="1" style={{ padding: '8px 10px', fontSize: '0.9rem', fontWeight: '700' }} /></div>
                     </div>
+                    <div style={{ marginTop: '8px', padding: '10px 14px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Result:</span><span style={{ fontSize: '1.1rem', fontWeight: '700' }}>{(results.reelSize * reelMultiplier).toFixed(2)} × {(results.cutSize * cutMultiplier).toFixed(2)} in</span></div>
                   </div>
                   <hr style={{ border: 'none', borderBottom: '1px solid var(--border-color)' }} />
                   <div>
@@ -2420,7 +2424,7 @@ export default function Production() {
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={padDateOfFinish || ''} onChange={e => setPadDateOfFinish(e.target.value)} className="form-control" /></div>
             <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
               <button type="button" onClick={() => setPadShowAdvanced(!padShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{padShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {padShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="number" value={padFluteExtraPercent} onWheel={e => e.target.blur()} onChange={e => setPadFluteExtraPercent(Math.max(0, parseFloat(e.target.value) || 0))} className="form-control" step="0.1" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="number" value={padQtyData} onWheel={e => e.target.blur()} onChange={e => setPadQtyData(Math.max(0.001, parseFloat(e.target.value) || 0))} className="form-control" step="0.001" /></div></div>)}
+              {padShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={padFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setPadFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={padQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setPadQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
             </div>
           {editingId && editingType === 'pad' ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
@@ -2509,7 +2513,7 @@ export default function Production() {
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={partitionDateOfFinish || ''} onChange={e => setPartitionDateOfFinish(e.target.value)} className="form-control" /></div>
             <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
               <button type="button" onClick={() => setPartitionShowAdvanced(!partitionShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{partitionShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {partitionShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="number" value={partitionFluteExtraPercent} onChange={e => setPartitionFluteExtraPercent(Math.max(0, parseFloat(e.target.value) || 0))} className="form-control" step="0.1" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="number" value={partitionQtyData} onChange={e => setPartitionQtyData(Math.max(0.001, parseFloat(e.target.value) || 0))} className="form-control" step="0.001" /></div></div>)}
+              {partitionShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={partitionFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setPartitionFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={partitionQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setPartitionQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
             </div>
           {editingId && editingType === 'partition' ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
@@ -2562,16 +2566,17 @@ export default function Production() {
                         {(() => {
                           const totalMult = partitionReelMultiplier * partitionCutMultiplier;
                           const linerPlies = (Number(partitionPlyType) - 1) / 2;
+                          const partMult = parseNumeric(partitionQtyData, 1);
                           
                           const p1DefPack = partitionHasPacking ? Math.ceil((Number(partitionQtyPads) * 1 * Number(partitionResults.first.usedSlot)) / totalMult) : 0;
                           const p1DefLiner = Math.ceil((Number(partitionQtyPads) * 1 * Number(partitionResults.first.usedSlot) * linerPlies) / totalMult);
-                          const p1TotPack = partitionHasPacking ? Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * Number(partitionResults.first.usedSlot)) / totalMult) : 0;
-                          const p1TotLiner = Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * Number(partitionResults.first.usedSlot) * linerPlies) / totalMult);
+                          const p1TotPack = partitionHasPacking ? Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * partMult * Number(partitionResults.first.usedSlot)) / totalMult) : 0;
+                          const p1TotLiner = Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * partMult * Number(partitionResults.first.usedSlot) * linerPlies) / totalMult);
 
                           const p2DefPack = partitionHasPacking ? Math.ceil((Number(partitionQtyPads) * 1 * Number(partitionResults.second.usedSlot)) / totalMult) : 0;
                           const p2DefLiner = Math.ceil((Number(partitionQtyPads) * 1 * Number(partitionResults.second.usedSlot) * linerPlies) / totalMult);
-                          const p2TotPack = partitionHasPacking ? Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * Number(partitionResults.second.usedSlot)) / totalMult) : 0;
-                          const p2TotLiner = Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * Number(partitionResults.second.usedSlot) * linerPlies) / totalMult);
+                          const p2TotPack = partitionHasPacking ? Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * partMult * Number(partitionResults.second.usedSlot)) / totalMult) : 0;
+                          const p2TotLiner = Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * partMult * Number(partitionResults.second.usedSlot) * linerPlies) / totalMult);
 
                           return (
                             <>
@@ -2637,12 +2642,13 @@ export default function Production() {
                     <h3 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', marginBottom: '12px' }}>📦 Materials Computation</h3>
                     {(() => {
                       const totalMultiplier = partitionReelMultiplier * partitionCutMultiplier;
+                      const partDataMult = parseNumeric(partitionQtyData, 1);
                       const packingCount = partitionResults.isPaired 
-                        ? (partitionHasPacking ? (Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * Number(partitionResults.first.usedSlot)) / totalMultiplier) + Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * Number(partitionResults.second.usedSlot)) / totalMultiplier)) : 0)
+                        ? (partitionHasPacking ? (Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * partDataMult * Number(partitionResults.first.usedSlot)) / totalMultiplier) + Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * partDataMult * Number(partitionResults.second.usedSlot)) / totalMultiplier)) : 0)
                         : Math.ceil(partitionResults.padPackingPaperCount / totalMultiplier);
                       
                       const linerCount = partitionResults.isPaired
-                        ? (Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * Number(partitionResults.first.usedSlot) * ((Number(partitionPlyType) - 1) / 2)) / totalMultiplier) + Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * Number(partitionResults.second.usedSlot) * ((Number(partitionPlyType) - 1) / 2)) / totalMultiplier))
+                        ? (Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * partDataMult * Number(partitionResults.first.usedSlot) * ((Number(partitionPlyType) - 1) / 2)) / totalMultiplier) + Math.ceil((Number(partitionQtyPads) * Number(partitionSet) * partDataMult * Number(partitionResults.second.usedSlot) * ((Number(partitionPlyType) - 1) / 2)) / totalMultiplier))
                         : Math.ceil(partitionResults.padLinerCount / totalMultiplier);
 
                       return (
@@ -2706,7 +2712,7 @@ export default function Production() {
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={trayDateOfFinish || ''} onChange={e => setTrayDateOfFinish(e.target.value)} className="form-control" /></div>
             <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
               <button type="button" onClick={() => setTrayShowAdvanced(!trayShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{trayShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {trayShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="number" value={trayFluteExtraPercent} onChange={e => setTrayFluteExtraPercent(Math.max(0, parseFloat(e.target.value) || 0))} className="form-control" step="0.1" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="number" value={trayQtyData} onChange={e => setTrayQtyData(Math.max(0.001, parseFloat(e.target.value) || 0))} className="form-control" step="0.001" /></div></div>)}
+              {trayShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={trayFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setTrayFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={trayQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setTrayQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
             </div>
           {editingId && editingType === 'tray' ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
@@ -2841,7 +2847,7 @@ export default function Production() {
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={sleaveDateOfFinish || ''} onChange={e => setSleaveDateOfFinish(e.target.value)} className="form-control" /></div>
             <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
               <button type="button" onClick={() => setSleaveShowAdvanced(!sleaveShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{sleaveShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {sleaveShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="number" value={sleaveFluteExtraPercent} onChange={e => setSleaveFluteExtraPercent(Math.max(0, parseFloat(e.target.value) || 0))} className="form-control" step="0.1" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="number" value={sleaveQtyData} onChange={e => setSleaveQtyData(Math.max(0.001, parseFloat(e.target.value) || 0))} className="form-control" step="0.001" /></div></div>)}
+              {sleaveShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={sleaveFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setSleaveFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={sleaveQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setSleaveQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
             </div>
           {editingId && (editingType === 'sleave' || editingType === 'tray_box') ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
@@ -3001,7 +3007,7 @@ export default function Production() {
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={collerBoxDateOfFinish || ''} onChange={e => setCollerBoxDateOfFinish(e.target.value)} className="form-control" /></div>
             <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
               <button type="button" onClick={() => setCollerBoxShowAdvanced(!collerBoxShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{collerBoxShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {collerBoxShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="number" value={collerBoxFluteExtraPercent} onChange={e => setCollerBoxFluteExtraPercent(Math.max(0, parseFloat(e.target.value) || 0))} className="form-control" step="0.1" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="number" value={collerBoxQtyData} onChange={e => setCollerBoxQtyData(Math.max(0.001, parseFloat(e.target.value) || 0))} className="form-control" step="0.001" /></div></div>)}
+              {collerBoxShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={collerBoxFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setCollerBoxFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={collerBoxQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setCollerBoxQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
             </div>
           {editingId && (editingType === 'coller_box' || editingType === 'coller') ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
@@ -3161,7 +3167,7 @@ export default function Production() {
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={uBoxDateOfFinish || ''} onChange={e => setUBoxDateOfFinish(e.target.value)} className="form-control" /></div>
             <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
               <button type="button" onClick={() => setUBoxShowAdvanced(!uBoxShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{uBoxShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {uBoxShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="number" value={uBoxFluteExtraPercent} onChange={e => setUBoxFluteExtraPercent(Math.max(0, parseFloat(e.target.value) || 0))} className="form-control" step="0.1" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="number" value={uBoxQtyData} onChange={e => setUBoxQtyData(Math.max(0.001, parseFloat(e.target.value) || 0))} className="form-control" step="0.001" /></div></div>)}
+              {uBoxShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={uBoxFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setUBoxFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={uBoxQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setUBoxQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
             </div>
           {editingId && (editingType === 'top_side_tray_box' || editingType === 'topSideTray' || editingType === 'top_side_tray') ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
@@ -3308,7 +3314,7 @@ export default function Production() {
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={uTypeDateOfFinish || ''} onChange={e => setUTypeDateOfFinish(e.target.value)} className="form-control" /></div>
             <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
               <button type="button" onClick={() => setUTypeShowAdvanced(!uTypeShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{uTypeShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {uTypeShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="number" value={uTypeFluteExtraPercent} onChange={e => setUTypeFluteExtraPercent(Math.max(0, parseFloat(e.target.value) || 0))} className="form-control" step="0.1" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="number" value={uTypeQtyData} onChange={e => setUTypeQtyData(Math.max(0.001, parseFloat(e.target.value) || 0))} className="form-control" step="0.001" /></div></div>)}
+              {uTypeShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={uTypeFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setUTypeFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={uTypeQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setUTypeQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
             </div>
           {editingId && (editingType === 'universal' || editingType === 'universal_type') ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
@@ -3452,7 +3458,7 @@ export default function Production() {
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={formatToIsoDate(fcBoxDateOfFinish)} onChange={e => setFcBoxDateOfFinish(e.target.value)} className="form-control" /></div>
             <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
               <button type="button" onClick={() => setFcBoxShowAdvanced(!fcBoxShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{fcBoxShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {fcBoxShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="number" value={fcBoxFluteExtraPercent} onChange={e => setFcBoxFluteExtraPercent(Math.max(0, parseFloat(e.target.value) || 0))} className="form-control" step="0.1" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="number" value={fcBoxQtyData} onChange={e => setFcBoxQtyData(Math.max(0.001, parseFloat(e.target.value) || 0))} className="form-control" step="0.001" /></div></div>)}
+              {fcBoxShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={fcBoxFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setFcBoxFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={fcBoxQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setFcBoxQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
             </div>
           {editingId && (editingType === 'full_closing' || editingType === 'fullClosing' || editingType === 'full_closing_box') ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
@@ -3490,42 +3496,11 @@ export default function Production() {
                     <h3 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', marginBottom: '12px' }}>📐 Calculated Sizing</h3>
                     {renderConvertedSizeDisplay(fcBoxResults.selectedSize, true)}
                     <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Size in Inch (Reel × Cut)</div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '4px' }}>
-                      {(() => {
-                        const sizeOptions = [
-                          { label: 'Normal (1× Reel, 1× Cut)', reel: 1, cut: 1 },
-                          { label: 'Double Reel (2× Reel, 1× Cut)', reel: 2, cut: 1 },
-                          { label: 'Triple Reel (3× Reel, 1× Cut)', reel: 3, cut: 1 },
-                          { label: 'Double Cut (1× Reel, 2× Cut)', reel: 1, cut: 2 },
-                          { label: 'Double Reel & Double Cut (2× Reel, 2× Cut)', reel: 2, cut: 2 },
-                          { label: 'Triple Reel & Double Cut (3× Reel, 2× Cut)', reel: 3, cut: 2 },
-                        ];
-                        const activeOption = sizeOptions.find(opt => opt.reel === fcBoxReelMultiplier && opt.cut === fcBoxCutMultiplier) || sizeOptions[0];
-                        return (
-                          <>
-                            <button type="button" onClick={() => setFcBoxShowSizeDropdown(!fcBoxShowSizeDropdown)} style={{ width: '100%', padding: '12px 16px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', fontWeight: '700', marginBottom: '4px', transition: 'all 0.2s' }}>
-                              <span style={{ fontSize: '0.85rem' }}>{activeOption.label.split(' (')[0]}: {(fcBoxResults.reelSize * fcBoxReelMultiplier).toFixed(2)} × {(fcBoxResults.cutSize * fcBoxCutMultiplier).toFixed(2)} in</span>
-                              {fcBoxShowSizeDropdown ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                            </button>
-                            {fcBoxShowSizeDropdown && (
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '180px', overflowY: 'auto', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '8px', backgroundColor: 'var(--bg-tertiary)', zIndex: 10 }} className="animate-fade">
-                                {sizeOptions.map(opt => {
-                                  const displayReel = (fcBoxResults.reelSize * opt.reel).toFixed(2);
-                                  const displayCut = (fcBoxResults.cutSize * opt.cut).toFixed(2);
-                                  const isSelected = fcBoxReelMultiplier === opt.reel && fcBoxCutMultiplier === opt.cut;
-                                  return (
-                                    <button key={`${opt.reel}-${opt.cut}`} type="button" onClick={() => { setFcBoxReelMultiplier(opt.reel); setFcBoxCutMultiplier(opt.cut); setFcBoxShowSizeDropdown(false); }} style={{ padding: '10px 12px', borderRadius: 'var(--radius-sm)', cursor: 'pointer', border: isSelected ? '1px solid var(--color-accent)' : '1px solid transparent', background: isSelected ? 'rgba(236, 72, 153, 0.15)' : 'var(--bg-secondary)', color: isSelected ? 'hsl(330, 75%, 55%)' : 'var(--text-primary)', transition: 'all 0.2s ease', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                      <span style={{ fontSize: '0.8rem', fontWeight: '600' }}>{opt.label}</span>
-                                      <span style={{ fontSize: '0.85rem', fontWeight: '700' }}>{displayReel} × {displayCut} in</span>
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </>
-                        );
-                      })()}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '4px' }}>
+                      <div><label style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Reel Multiply</label><input type="number" value={fcBoxReelMultiplier} onWheel={e => e.target.blur()} onChange={e => setFcBoxReelMultiplier(Math.max(1, parseFloat(e.target.value) || 1))} className="form-control" min="1" step="1" style={{ padding: '8px 10px', fontSize: '0.9rem', fontWeight: '700' }} /></div>
+                      <div><label style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Cut Multiply</label><input type="number" value={fcBoxCutMultiplier} onWheel={e => e.target.blur()} onChange={e => setFcBoxCutMultiplier(Math.max(1, parseFloat(e.target.value) || 1))} className="form-control" min="1" step="1" style={{ padding: '8px 10px', fontSize: '0.9rem', fontWeight: '700' }} /></div>
                     </div>
+                    <div style={{ marginTop: '8px', padding: '10px 14px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Result:</span><span style={{ fontSize: '1.1rem', fontWeight: '700' }}>{(fcBoxResults.reelSize * fcBoxReelMultiplier).toFixed(2)} × {(fcBoxResults.cutSize * fcBoxCutMultiplier).toFixed(2)} in</span></div>
                   </div>
                   <hr style={{ border: 'none', borderBottom: '1px solid var(--border-color)' }} />
                   <div>
