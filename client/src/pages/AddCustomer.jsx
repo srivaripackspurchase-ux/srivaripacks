@@ -1051,8 +1051,8 @@ export default function AddCustomer() {
               const isLamFc = item.is_laminated !== undefined && item.is_laminated !== null ? !!item.is_laminated : !!parsedTags.isLaminated;
               setFcBoxIsLaminated(isLamFc);
               if (parsedTags.extraChargesMeta?.laminationRate !== undefined) setFcBoxLaminationRupees(parsedTags.extraChargesMeta.laminationRate);
-              else if (item.lamination_price !== undefined && item.lamination_price !== null) setFcBoxLaminationRupees(item.lamination_price);
               else if (parsedTags.laminationPrice !== undefined) setFcBoxLaminationRupees(parsedTags.laminationPrice);
+              else if (item.lamination_price !== undefined && item.lamination_price !== null) setFcBoxLaminationRupees(item.lamination_price);
 
               const isPrnFc = item.is_printing !== undefined && item.is_printing !== null ? !!item.is_printing : !!parsedTags.isPrinting;
               setFcBoxIsPrintingCharge(isPrnFc);
@@ -1109,8 +1109,8 @@ export default function AddCustomer() {
               const isLamBox = item.is_laminated !== undefined && item.is_laminated !== null ? !!item.is_laminated : !!parsedTags.isLaminated;
               setBoxIsLaminated(isLamBox);
               if (parsedTags.extraChargesMeta?.laminationRate !== undefined) setBoxLaminationRupees(parsedTags.extraChargesMeta.laminationRate);
-              else if (item.lamination_price !== undefined && item.lamination_price !== null) setBoxLaminationRupees(item.lamination_price);
               else if (parsedTags.laminationPrice !== undefined) setBoxLaminationRupees(parsedTags.laminationPrice);
+              else if (item.lamination_price !== undefined && item.lamination_price !== null) setBoxLaminationRupees(item.lamination_price);
 
               const isPrnBox = item.is_printing !== undefined && item.is_printing !== null ? !!item.is_printing : !!parsedTags.isPrinting;
               setBoxIsPrintingCharge(isPrnBox);
@@ -1835,7 +1835,7 @@ export default function AddCustomer() {
       is_duplex: fcBoxIsDuplex,
       duplex_price: Number(fcBoxDuplexPrice),
       is_laminated: fcBoxIsLaminated,
-      lamination_price: Number(fcBoxLaminationRupees),
+      lamination_price: fcBoxIsLaminated && fcBoxResults ? Number(fcBoxResults.laminationSingleBoxPrice) : 0,
       is_printing: fcBoxIsPrintingCharge,
       printing_price: fcBoxResults ? Number(fcBoxResults.singleBoxPrintingCharge) : 0,
       is_ink: fcBoxIsInkCost,
@@ -1957,7 +1957,7 @@ export default function AddCustomer() {
       is_duplex: boxIsDuplex,
       duplex_price: Number(boxDuplexPrice),
       is_laminated: boxIsLaminated,
-      lamination_price: Number(boxLaminationRupees),
+      lamination_price: boxIsLaminated && boxResults ? Number(boxResults.laminationSingleBoxPrice) : 0,
       is_printing: boxIsPrintingCharge,
       printing_price: boxResults ? Number(boxResults.singleBoxPrintingCharge) : 0,
       is_ink: boxIsInkCost,

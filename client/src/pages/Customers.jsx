@@ -1660,8 +1660,8 @@ export default function Customers() {
     priceRow("Weight Per Unit:", `${Number(calc.weight_per_unit || 0).toFixed(4)} kg`);
     priceRow("Calculated Base Cost / Box:", `Rs. ${Number(calc.single_box_price || 0).toFixed(2)}`);
 
-    if (details.isDuplex) {
-      priceRow("Duplex Extra Cost (per box):", `Rs. ${details.duplexPrice.toFixed(2)}`);
+    if (pricing.isDuplex || details.isDuplex) {
+      priceRow("Duplex Extra Cost (per box):", `Rs. ${Number(pricing.duplexSingleBoxPrice || 0).toFixed(2)}`);
     }
     if (details.isLaminated) {
       priceRow("Lamination Extra Cost (per box):", `Rs. ${details.laminationPrice.toFixed(2)}`);
@@ -1961,16 +1961,13 @@ export default function Customers() {
                                     {pricing.isDuplex ? (
                                       <div style={{ fontSize: '0.85rem' }}>
                                         <div>Kraft: ₹{Number(pricing.kraftSingleBoxPrice || 0).toFixed(2)}</div>
-                                        <div style={{ color: 'var(--color-success)', fontSize: '0.8rem' }}>
-                                          Dup: ₹{Number(pricing.duplexSingleBoxPrice || 0).toFixed(2)}
-                                        </div>
                                       </div>
                                     ) : (
                                       pricing.perPiecePrice !== null ? `₹${Number(pricing.perPiecePrice).toFixed(2)}` : '-'
                                     )}
                                   </td>
-                                  <td style={{ fontWeight: details.isDuplex ? '600' : 'normal', color: details.isDuplex ? 'var(--color-accent)' : 'inherit' }}>
-                                    {details.isDuplex ? `₹${details.duplexPrice.toFixed(2)}` : '-'}
+                                  <td style={{ fontWeight: pricing.isDuplex || details.isDuplex ? '600' : 'normal', color: pricing.isDuplex || details.isDuplex ? 'var(--color-accent)' : 'inherit' }}>
+                                    {pricing.isDuplex || details.isDuplex ? `₹${Number(pricing.duplexSingleBoxPrice || 0).toFixed(2)}` : '-'}
                                   </td>
                                   <td style={{ fontWeight: details.isLaminated ? '600' : 'normal', color: details.isLaminated ? 'var(--color-success)' : 'inherit' }}>
                                     {details.isLaminated ? `₹${details.laminationPrice.toFixed(2)}` : '-'}

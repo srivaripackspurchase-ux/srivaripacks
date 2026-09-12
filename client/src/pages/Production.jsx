@@ -171,6 +171,22 @@ const ProductionFormFields = ({ companies, prefix, state, setState, showH = true
           placeholder="e.g. 100" 
         />
       </div>
+      {setState.setQtyData && (
+        <div className="form-group">
+          <label className="form-label">Quantity Data (Multiplier)</label>
+          <input 
+            type="text"
+            inputMode="decimal"
+            value={state.qtyData} 
+            onChange={e => {
+              const val = sanitizeUnsignedDecimalInput(e.target.value);
+              if (val !== null) setState.setQtyData(val);
+            }} 
+            className="form-control" 
+            placeholder="e.g. 1" 
+          />
+        </div>
+      )}
       {calcType === 'partition' && (
         <div className="form-group">
           <label className="form-label" style={{ fontWeight: '700', color: 'var(--color-accent)' }}>Set</label>
@@ -422,7 +438,7 @@ export default function Production() {
   const [fluteExtraPercent, setFluteExtraPercent] = useState('45');
   const [gsmFlute, setGsmFlute] = useState('150');
   const [gsmPacking, setGsmPacking] = useState('150');
-  const [qtyData, setQtyData] = useState('2');
+  const [qtyData, setQtyData] = useState('1');
   const [reelSizePlus, setReelSizePlus] = useState('');
   const [reelSizeMinus, setReelSizeMinus] = useState('');
   const [cutSizePlus, setCutSizePlus] = useState('');
@@ -495,7 +511,7 @@ export default function Production() {
   const [padFluteExtraPercent, setPadFluteExtraPercent] = useState('45');
   const [padGsmFlute, setPadGsmFlute] = useState('150');
   const [padGsmPacking, setPadGsmPacking] = useState('150');
-  const [padQtyData, setPadQtyData] = useState('2');
+  const [padQtyData, setPadQtyData] = useState('1');
   const [padReelSizePlus, setPadReelSizePlus] = useState('');
   const [padReelSizeMinus, setPadReelSizeMinus] = useState('');
   const [padCutSizePlus, setPadCutSizePlus] = useState('');
@@ -529,7 +545,7 @@ export default function Production() {
   const [partitionFluteExtraPercent, setPartitionFluteExtraPercent] = useState('45');
   const [partitionGsmFlute, setPartitionGsmFlute] = useState('150');
   const [partitionGsmPacking, setPartitionGsmPacking] = useState('150');
-  const [partitionQtyData, setPartitionQtyData] = useState('2');
+  const [partitionQtyData, setPartitionQtyData] = useState('1');
   const [partitionSet, setPartitionSet] = useState('1');
   const [partitionReelSizePlus, setPartitionReelSizePlus] = useState('');
   const [partitionReelSizeMinus, setPartitionReelSizeMinus] = useState('');
@@ -563,7 +579,7 @@ export default function Production() {
   const [trayFluteExtraPercent, setTrayFluteExtraPercent] = useState('45');
   const [trayGsmFlute, setTrayGsmFlute] = useState('150');
   const [trayGsmPacking, setTrayGsmPacking] = useState('150');
-  const [trayQtyData, setTrayQtyData] = useState('2');
+  const [trayQtyData, setTrayQtyData] = useState('1');
   const [trayReelSizePlus, setTrayReelSizePlus] = useState('');
   const [trayReelSizeMinus, setTrayReelSizeMinus] = useState('');
   const [trayCutSizePlus, setTrayCutSizePlus] = useState('');
@@ -595,7 +611,7 @@ export default function Production() {
   const [sleaveFluteExtraPercent, setSleaveFluteExtraPercent] = useState('45');
   const [sleaveGsmFlute, setSleaveGsmFlute] = useState('150');
   const [sleaveGsmPacking, setSleaveGsmPacking] = useState('150');
-  const [sleaveQtyData, setSleaveQtyData] = useState('2');
+  const [sleaveQtyData, setSleaveQtyData] = useState('1');
   const [sleaveReelSizePlus, setSleaveReelSizePlus] = useState('');
   const [sleaveReelSizeMinus, setSleaveReelSizeMinus] = useState('');
   const [sleaveCutSizePlus, setSleaveCutSizePlus] = useState('');
@@ -629,7 +645,7 @@ export default function Production() {
   const [collerBoxFluteExtraPercent, setCollerBoxFluteExtraPercent] = useState('45');
   const [collerBoxGsmFlute, setCollerBoxGsmFlute] = useState('150');
   const [collerBoxGsmPacking, setCollerBoxGsmPacking] = useState('150');
-  const [collerBoxQtyData, setCollerBoxQtyData] = useState('2');
+  const [collerBoxQtyData, setCollerBoxQtyData] = useState('1');
   const [collerBoxReelSizePlus, setCollerBoxReelSizePlus] = useState('');
   const [collerBoxReelSizeMinus, setCollerBoxReelSizeMinus] = useState('');
   const [collerBoxCutSizePlus, setCollerBoxCutSizePlus] = useState('');
@@ -663,7 +679,7 @@ export default function Production() {
   const [uBoxFluteExtraPercent, setUBoxFluteExtraPercent] = useState('45');
   const [uBoxGsmFlute, setUBoxGsmFlute] = useState('150');
   const [uBoxGsmPacking, setUBoxGsmPacking] = useState('150');
-  const [uBoxQtyData, setUBoxQtyData] = useState('2');
+  const [uBoxQtyData, setUBoxQtyData] = useState('1');
   const [uBoxReelSizePlus, setUBoxReelSizePlus] = useState('');
   const [uBoxReelSizeMinus, setUBoxReelSizeMinus] = useState('');
   const [uBoxCutSizePlus, setUBoxCutSizePlus] = useState('');
@@ -697,7 +713,7 @@ export default function Production() {
   const [uTypeFluteExtraPercent, setUTypeFluteExtraPercent] = useState('45');
   const [uTypeGsmFlute, setUTypeGsmFlute] = useState('150');
   const [uTypeGsmPacking, setUTypeGsmPacking] = useState('150');
-  const [uTypeQtyData, setUTypeQtyData] = useState('2');
+  const [uTypeQtyData, setUTypeQtyData] = useState('1');
   const [uTypeReelSizePlus, setUTypeReelSizePlus] = useState('');
   const [uTypeReelSizeMinus, setUTypeReelSizeMinus] = useState('');
   const [uTypeCutSizePlus, setUTypeCutSizePlus] = useState('');
@@ -729,7 +745,7 @@ export default function Production() {
   const [fcBoxFluteExtraPercent, setFcBoxFluteExtraPercent] = useState('45');
   const [fcBoxGsmFlute, setFcBoxGsmFlute] = useState('150');
   const [fcBoxGsmPacking, setFcBoxGsmPacking] = useState('150');
-  const [fcBoxQtyData, setFcBoxQtyData] = useState('2');
+  const [fcBoxQtyData, setFcBoxQtyData] = useState('1');
   const [fcBoxReelSizePlus, setFcBoxReelSizePlus] = useState('');
   const [fcBoxReelSizeMinus, setFcBoxReelSizeMinus] = useState('');
   const [fcBoxCutSizePlus, setFcBoxCutSizePlus] = useState('');
@@ -2275,6 +2291,7 @@ export default function Production() {
                 />
               </div>
               <div className="form-group"><label className="form-label">Quantity of Boxes</label><input type="text" inputMode="numeric" value={qtyBoxes} onChange={e => { const val = sanitizeUnsignedIntegerInput(e.target.value); if (val !== null) setQtyBoxes(val); }} className="form-control" placeholder="e.g. 100" /></div>
+              <div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={qtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setQtyData(val); }} className="form-control" placeholder="e.g. 1" /></div>
               <div className="form-group"><label className="form-label">Ply Type Option</label><select value={plyType} onChange={e => setPlyType(e.target.value)} className="form-control"><option value="3">3 Ply (1 Liner + 1 Packing)</option><option value="5">5 Ply (2 Liner + 1 Packing)</option><option value="7">7 Ply (3 Liner + 1 Packing)</option><option value="9">9 Ply (4 Liner + 1 Packing)</option><option value="11">11 Ply (5 Liner + 1 Packing)</option><option value="13">13 Ply (6 Liner + 1 Packing)</option></select></div>
               <div className="form-group" style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column', background: 'rgba(99, 102, 241, 0.04)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', padding: '12px', marginTop: '4px' }}>
                 <label className="form-label" style={{ marginBottom: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -2312,10 +2329,7 @@ export default function Production() {
             </div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Reference Name (Optional)</label><input type="text" placeholder="e.g. SRI VARI PACKS Production Run" value={customerName} onChange={e => setCustomerName(e.target.value)} className="form-control" /></div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={dateOfFinish || ''} onChange={e => setDateOfFinish(e.target.value)} className="form-control" /></div>
-            <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-              <button type="button" onClick={() => setShowAdvanced(!showAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculations Parameters</span>{showAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {showAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={fluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={qtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
-            </div>
+
           {editingId && editingType === 'box' ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
               <button
@@ -2414,18 +2428,15 @@ export default function Production() {
             <h2 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-heading)', marginBottom: '4px' }}>Pad Specification Inputs</h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '24px' }}>Flat corrugated pad — Length × Width only (no height)</p>
             <ProductionFormFields companies={companies} prefix="Pads" showH={false} calcType="pad"
-              state={{ companyId: padCompanyId, sizeId: padSizeId, sizes: padSizes, qty: padQtyPads, plyType: padPlyType, packingOption: padPackingOption, linerOption: padLinerOption, gsmPaper: padGsmPaper, bf: padBf, reelSizePlus: padReelSizePlus, reelSizeMinus: padReelSizeMinus, cutSizePlus: padCutSizePlus, cutSizeMinus: padCutSizeMinus, hasPacking: padHasPacking }}
-              setState={{ setCompanyId: setPadCompanyId, setSizeId: setPadSizeId, setQty: setPadQtyPads, setPlyType: setPadPlyType, setPackingOption: setPadPackingOption, setLinerOption: setPadLinerOption, setGsmPaper: setPadGsmPaper, setBf: setPadBf, setReelSizePlus: setPadReelSizePlus, setReelSizeMinus: setPadReelSizeMinus, setCutSizePlus: setPadCutSizePlus, setCutSizeMinus: setPadCutSizeMinus, setHasPacking: setPadHasPacking }}
+              state={{ companyId: padCompanyId, sizeId: padSizeId, sizes: padSizes, qty: padQtyPads, plyType: padPlyType, packingOption: padPackingOption, linerOption: padLinerOption, gsmPaper: padGsmPaper, bf: padBf, reelSizePlus: padReelSizePlus, reelSizeMinus: padReelSizeMinus, cutSizePlus: padCutSizePlus, cutSizeMinus: padCutSizeMinus, hasPacking: padHasPacking, qtyData: padQtyData }}
+              setState={{ setCompanyId: setPadCompanyId, setSizeId: setPadSizeId, setQty: setPadQtyPads, setPlyType: setPadPlyType, setPackingOption: setPadPackingOption, setLinerOption: setPadLinerOption, setGsmPaper: setPadGsmPaper, setBf: setPadBf, setReelSizePlus: setPadReelSizePlus, setReelSizeMinus: setPadReelSizeMinus, setCutSizePlus: setPadCutSizePlus, setCutSizeMinus: setPadCutSizeMinus, setHasPacking: setPadHasPacking, setQtyData: setPadQtyData }}
             />
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><FolderOpen size={14} /> Production File</label>
               {!padShowNewFileInput ? (<div style={{ display: 'flex', gap: '8px' }}><select value={padProductionFile} onChange={e => setPadProductionFile(e.target.value)} className="form-control" style={{ flex: 1 }}><option value="">-- Select a File --</option>{existingFiles.map(f => <option key={f} value={f}>{f}</option>)}</select><button type="button" onClick={() => setPadShowNewFileInput(true)} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-accent)', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--color-accent)', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem', whiteSpace: 'nowrap' }}><FolderPlus size={14} /> New</button></div>) : (<div style={{ display: 'flex', gap: '8px' }}><input type="text" placeholder="Enter new file name..." value={padNewFileName} onChange={e => setPadNewFileName(e.target.value)} className="form-control" style={{ flex: 1 }} autoFocus /><button type="button" onClick={() => { setPadShowNewFileInput(false); setPadNewFileName(''); }} style={{ padding: '8px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem' }}>Cancel</button></div>)}
             </div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Reference Name (Optional)</label><input type="text" placeholder="e.g. SRI VARI PACKS Pad Run" value={padCustomerName} onChange={e => setPadCustomerName(e.target.value)} className="form-control" /></div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={padDateOfFinish || ''} onChange={e => setPadDateOfFinish(e.target.value)} className="form-control" /></div>
-            <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-              <button type="button" onClick={() => setPadShowAdvanced(!padShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{padShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {padShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={padFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setPadFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={padQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setPadQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
-            </div>
+
           {editingId && editingType === 'pad' ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
               <button
@@ -2503,18 +2514,15 @@ export default function Production() {
             <h2 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-heading)', marginBottom: '4px' }}>Partition Specification Inputs</h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '24px' }}>Flat corrugated partition — Length × Width only (no height)</p>
             <ProductionFormFields companies={companies} prefix="Partitions" showH={false} calcType="partition"
-              state={{ companyId: partitionCompanyId, sizeId: partitionSizeId, sizes: partitionGroupedSizes, qty: partitionQtyPads, set: partitionSet, plyType: partitionPlyType, packingOption: partitionPackingOption, linerOption: partitionLinerOption, gsmPaper: partitionGsmPaper, bf: partitionBf, reelSizePlus: partitionReelSizePlus, reelSizeMinus: partitionReelSizeMinus, cutSizePlus: partitionCutSizePlus, cutSizeMinus: partitionCutSizeMinus, hasPacking: partitionHasPacking }}
-              setState={{ setCompanyId: setPartitionCompanyId, setSizeId: setPartitionSizeId, setQty: setPartitionQtyPads, setSet: setPartitionSet, setPlyType: setPartitionPlyType, setPackingOption: setPartitionPackingOption, setLinerOption: setPartitionLinerOption, setGsmPaper: setPartitionGsmPaper, setBf: setPartitionBf, setReelSizePlus: setPartitionReelSizePlus, setReelSizeMinus: setPartitionReelSizeMinus, setCutSizePlus: setPartitionCutSizePlus, setCutSizeMinus: setPartitionCutSizeMinus, setHasPacking: setPartitionHasPacking }}
+              state={{ companyId: partitionCompanyId, sizeId: partitionSizeId, sizes: partitionGroupedSizes, qty: partitionQtyPads, set: partitionSet, plyType: partitionPlyType, packingOption: partitionPackingOption, linerOption: partitionLinerOption, gsmPaper: partitionGsmPaper, bf: partitionBf, reelSizePlus: partitionReelSizePlus, reelSizeMinus: partitionReelSizeMinus, cutSizePlus: partitionCutSizePlus, cutSizeMinus: partitionCutSizeMinus, hasPacking: partitionHasPacking, qtyData: partitionQtyData }}
+              setState={{ setCompanyId: setPartitionCompanyId, setSizeId: setPartitionSizeId, setQty: setPartitionQtyPads, setSet: setPartitionSet, setPlyType: setPartitionPlyType, setPackingOption: setPartitionPackingOption, setLinerOption: setPartitionLinerOption, setGsmPaper: setPartitionGsmPaper, setBf: setPartitionBf, setReelSizePlus: setPartitionReelSizePlus, setReelSizeMinus: setPartitionReelSizeMinus, setCutSizePlus: setPartitionCutSizePlus, setCutSizeMinus: setPartitionCutSizeMinus, setHasPacking: setPartitionHasPacking, setQtyData: setPartitionQtyData }}
             />
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><FolderOpen size={14} /> Production File</label>
               {!partitionShowNewFileInput ? (<div style={{ display: 'flex', gap: '8px' }}><select value={partitionProductionFile} onChange={e => setPartitionProductionFile(e.target.value)} className="form-control" style={{ flex: 1 }}><option value="">-- Select a File --</option>{existingFiles.map(f => <option key={f} value={f}>{f}</option>)}</select><button type="button" onClick={() => setPartitionShowNewFileInput(true)} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-accent)', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--color-accent)', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem', whiteSpace: 'nowrap' }}><FolderPlus size={14} /> New</button></div>) : (<div style={{ display: 'flex', gap: '8px' }}><input type="text" placeholder="Enter new file name..." value={partitionNewFileName} onChange={e => setPartitionNewFileName(e.target.value)} className="form-control" style={{ flex: 1 }} autoFocus /><button type="button" onClick={() => { setPartitionShowNewFileInput(false); setPartitionNewFileName(''); }} style={{ padding: '8px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem' }}>Cancel</button></div>)}
             </div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Reference Name (Optional)</label><input type="text" placeholder="e.g. SRI VARI PACKS Partition Run" value={partitionCustomerName} onChange={e => setPartitionCustomerName(e.target.value)} className="form-control" /></div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={partitionDateOfFinish || ''} onChange={e => setPartitionDateOfFinish(e.target.value)} className="form-control" /></div>
-            <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-              <button type="button" onClick={() => setPartitionShowAdvanced(!partitionShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{partitionShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {partitionShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={partitionFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setPartitionFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={partitionQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setPartitionQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
-            </div>
+
           {editingId && editingType === 'partition' ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
               <button
@@ -2702,18 +2710,15 @@ export default function Production() {
             <h2 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-heading)', marginBottom: '4px' }}>Tray Specification Inputs</h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '24px' }}>Corrugated tray — uses L × W × H dimensions</p>
             <ProductionFormFields companies={companies} prefix="Trays" showH={true} calcType="tray"
-              state={{ companyId: trayCompanyId, sizeId: traySizeId, sizes: traySizes, qty: trayQtyTrays, plyType: trayPlyType, packingOption: trayPackingOption, linerOption: trayLinerOption, gsmPaper: trayGsmPaper, bf: trayBf, reelSizePlus: trayReelSizePlus, reelSizeMinus: trayReelSizeMinus, cutSizePlus: trayCutSizePlus, cutSizeMinus: trayCutSizeMinus, hasPacking: trayHasPacking }}
-              setState={{ setCompanyId: setTrayCompanyId, setSizeId: setTraySizeId, setQty: setTrayQtyTrays, setPlyType: setTrayPlyType, setPackingOption: setTrayPackingOption, setLinerOption: setTrayLinerOption, setGsmPaper: setTrayGsmPaper, setBf: setTrayBf, setReelSizePlus: setTrayReelSizePlus, setReelSizeMinus: setTrayReelSizeMinus, setCutSizePlus: setTrayCutSizePlus, setCutSizeMinus: setTrayCutSizeMinus, setHasPacking: setTrayHasPacking }}
+              state={{ companyId: trayCompanyId, sizeId: traySizeId, sizes: traySizes, qty: trayQtyTrays, plyType: trayPlyType, packingOption: trayPackingOption, linerOption: trayLinerOption, gsmPaper: trayGsmPaper, bf: trayBf, reelSizePlus: trayReelSizePlus, reelSizeMinus: trayReelSizeMinus, cutSizePlus: trayCutSizePlus, cutSizeMinus: trayCutSizeMinus, hasPacking: trayHasPacking, qtyData: trayQtyData }}
+              setState={{ setCompanyId: setTrayCompanyId, setSizeId: setTraySizeId, setQty: setTrayQtyTrays, setPlyType: setTrayPlyType, setPackingOption: setTrayPackingOption, setLinerOption: setTrayLinerOption, setGsmPaper: setTrayGsmPaper, setBf: setTrayBf, setReelSizePlus: setTrayReelSizePlus, setReelSizeMinus: setTrayReelSizeMinus, setCutSizePlus: setTrayCutSizePlus, setCutSizeMinus: setTrayCutSizeMinus, setHasPacking: setTrayHasPacking, setQtyData: setTrayQtyData }}
             />
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><FolderOpen size={14} /> Production File</label>
               {!trayShowNewFileInput ? (<div style={{ display: 'flex', gap: '8px' }}><select value={trayProductionFile} onChange={e => setTrayProductionFile(e.target.value)} className="form-control" style={{ flex: 1 }}><option value="">-- Select a File --</option>{existingFiles.map(f => <option key={f} value={f}>{f}</option>)}</select><button type="button" onClick={() => setTrayShowNewFileInput(true)} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid hsl(150, 65%, 45%)', background: 'rgba(50, 160, 100, 0.1)', color: 'hsl(150, 65%, 45%)', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem', whiteSpace: 'nowrap' }}><FolderPlus size={14} /> New</button></div>) : (<div style={{ display: 'flex', gap: '8px' }}><input type="text" placeholder="Enter new file name..." value={trayNewFileName} onChange={e => setTrayNewFileName(e.target.value)} className="form-control" style={{ flex: 1 }} autoFocus /><button type="button" onClick={() => { setTrayShowNewFileInput(false); setTrayNewFileName(''); }} style={{ padding: '8px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem' }}>Cancel</button></div>)}
             </div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Reference Name (Optional)</label><input type="text" placeholder="e.g. SRI VARI PACKS Tray Run" value={trayCustomerName} onChange={e => setTrayCustomerName(e.target.value)} className="form-control" /></div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={trayDateOfFinish || ''} onChange={e => setTrayDateOfFinish(e.target.value)} className="form-control" /></div>
-            <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-              <button type="button" onClick={() => setTrayShowAdvanced(!trayShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{trayShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {trayShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={trayFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setTrayFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={trayQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setTrayQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
-            </div>
+
           {editingId && editingType === 'tray' ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
               <button
@@ -2831,6 +2836,7 @@ export default function Production() {
                 />
               </div>
               <div className="form-group"><label className="form-label">Quantity of Sleaves</label><input type="number" value={sleaveQty} onChange={e => setSleaveQty(Math.max(1, parseInt(e.target.value) || 0))} className="form-control" min="1" /></div>
+              <div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={sleaveQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setSleaveQtyData(val); }} className="form-control" placeholder="e.g. 1" /></div>
               <div className="form-group"><label className="form-label">Ply Type Option</label><select value={sleavePlyType} onChange={e => setSleavePlyType(e.target.value)} className="form-control"><option value="3">3 Ply (1 Liner + 1 Packing)</option><option value="5">5 Ply (2 Liner + 1 Packing)</option><option value="7">7 Ply (3 Liner + 1 Packing)</option><option value="9">9 Ply (4 Liner + 1 Packing)</option><option value="11">11 Ply (5 Liner + 1 Packing)</option><option value="13">13 Ply (6 Liner + 1 Packing)</option></select></div>
               <div className="form-group"><label className="form-label">Liner Paper Option</label><div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>{['G/N', 'G/G', 'N/G', 'N/N'].map(opt => <button key={opt} type="button" onClick={() => setSleaveLinerOption(opt)} style={{ flex: '1 1 calc(50% - 4px)', minWidth: '80px', padding: '10px', borderRadius: 'var(--radius-sm)', fontWeight: '700', cursor: 'pointer', border: '1px solid var(--border-color)', background: sleaveLinerOption === opt ? 'var(--gradient-accent)' : 'var(--bg-secondary)', color: sleaveLinerOption === opt ? 'white' : 'var(--text-secondary)', transition: 'all 0.2s' }}>{opt}</button>)}</div></div>
               <div className="form-group"><label className="form-label">GSM (Paper Thickness)</label><select value={sleaveGsmPaper} onChange={e => setSleaveGsmPaper(e.target.value)} className="form-control"><option value="100">100 GSM</option><option value="120">120 GSM</option><option value="140">140 GSM</option><option value="150">150 GSM</option><option value="180">180 GSM</option><option value="200">200 GSM</option><option value="220">220 GSM</option></select></div>
@@ -2845,10 +2851,7 @@ export default function Production() {
             </div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Reference Name (Optional)</label><input type="text" placeholder="e.g. SRI VARI PACKS Sleave Run" value={sleaveCustomerName} onChange={e => setSleaveCustomerName(e.target.value)} className="form-control" /></div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={sleaveDateOfFinish || ''} onChange={e => setSleaveDateOfFinish(e.target.value)} className="form-control" /></div>
-            <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-              <button type="button" onClick={() => setSleaveShowAdvanced(!sleaveShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{sleaveShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {sleaveShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={sleaveFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setSleaveFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={sleaveQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setSleaveQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
-            </div>
+
           {editingId && (editingType === 'sleave' || editingType === 'tray_box') ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
               <button
@@ -2991,6 +2994,7 @@ export default function Production() {
                 />
               </div>
               <div className="form-group"><label className="form-label">Quantity of Coller Boxes</label><input type="number" value={collerBoxQty} onChange={e => setCollerBoxQty(Math.max(1, parseInt(e.target.value) || 0))} className="form-control" min="1" /></div>
+              <div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={collerBoxQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setCollerBoxQtyData(val); }} className="form-control" placeholder="e.g. 1" /></div>
               <div className="form-group"><label className="form-label">Ply Type Option</label><select value={collerBoxPlyType} onChange={e => setCollerBoxPlyType(e.target.value)} className="form-control"><option value="3">3 Ply (1 Liner + 1 Packing)</option><option value="5">5 Ply (2 Liner + 1 Packing)</option><option value="7">7 Ply (3 Liner + 1 Packing)</option><option value="9">9 Ply (4 Liner + 1 Packing)</option><option value="11">11 Ply (5 Liner + 1 Packing)</option><option value="13">13 Ply (6 Liner + 1 Packing)</option></select></div>
               <div className="form-group"><label className="form-label">Liner Paper Option</label><div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>{['G/N', 'G/G', 'N/G', 'N/N'].map(opt => <button key={opt} type="button" onClick={() => setCollerBoxLinerOption(opt)} style={{ flex: '1 1 calc(50% - 4px)', minWidth: '80px', padding: '10px', borderRadius: 'var(--radius-sm)', fontWeight: '700', cursor: 'pointer', border: '1px solid var(--border-color)', background: collerBoxLinerOption === opt ? 'var(--gradient-accent)' : 'var(--bg-secondary)', color: collerBoxLinerOption === opt ? 'white' : 'var(--text-secondary)', transition: 'all 0.2s' }}>{opt}</button>)}</div></div>
               <div className="form-group"><label className="form-label">GSM (Paper Thickness)</label><select value={collerBoxGsmPaper} onChange={e => setCollerBoxGsmPaper(e.target.value)} className="form-control"><option value="100">100 GSM</option><option value="120">120 GSM</option><option value="140">140 GSM</option><option value="150">150 GSM</option><option value="180">180 GSM</option><option value="200">200 GSM</option><option value="220">220 GSM</option></select></div>
@@ -3005,10 +3009,7 @@ export default function Production() {
             </div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Reference Name (Optional)</label><input type="text" placeholder="e.g. SRI VARI PACKS Coller Box Run" value={collerBoxCustomerName} onChange={e => setCollerBoxCustomerName(e.target.value)} className="form-control" /></div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={collerBoxDateOfFinish || ''} onChange={e => setCollerBoxDateOfFinish(e.target.value)} className="form-control" /></div>
-            <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-              <button type="button" onClick={() => setCollerBoxShowAdvanced(!collerBoxShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{collerBoxShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {collerBoxShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={collerBoxFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setCollerBoxFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={collerBoxQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setCollerBoxQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
-            </div>
+
           {editingId && (editingType === 'coller_box' || editingType === 'coller') ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
               <button
@@ -3151,6 +3152,7 @@ export default function Production() {
                 />
               </div>
               <div className="form-group"><label className="form-label">Quantity of Top Side Tray Boxes</label><input type="number" value={uBoxQty} onChange={e => setUBoxQty(Math.max(1, parseInt(e.target.value) || 0))} className="form-control" min="1" /></div>
+              <div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={uBoxQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setUBoxQtyData(val); }} className="form-control" placeholder="e.g. 1" /></div>
               <div className="form-group"><label className="form-label">Ply Type Option</label><select value={uBoxPlyType} onChange={e => setUBoxPlyType(e.target.value)} className="form-control"><option value="3">3 Ply (1 Liner + 1 Packing)</option><option value="5">5 Ply (2 Liner + 1 Packing)</option><option value="7">7 Ply (3 Liner + 1 Packing)</option><option value="9">9 Ply (4 Liner + 1 Packing)</option><option value="11">11 Ply (5 Liner + 1 Packing)</option><option value="13">13 Ply (6 Liner + 1 Packing)</option></select></div>
               <div className="form-group"><label className="form-label">Liner Paper Option</label><div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>{['G/N', 'G/G', 'N/G', 'N/N'].map(opt => <button key={opt} type="button" onClick={() => setUBoxLinerOption(opt)} style={{ flex: '1 1 calc(50% - 4px)', minWidth: '80px', padding: '10px', borderRadius: 'var(--radius-sm)', fontWeight: '700', cursor: 'pointer', border: '1px solid var(--border-color)', background: uBoxLinerOption === opt ? 'var(--gradient-accent)' : 'var(--bg-secondary)', color: uBoxLinerOption === opt ? 'white' : 'var(--text-secondary)', transition: 'all 0.2s' }}>{opt}</button>)}</div></div>
               <div className="form-group"><label className="form-label">GSM (Paper Thickness)</label><select value={uBoxGsmPaper} onChange={e => setUBoxGsmPaper(e.target.value)} className="form-control"><option value="100">100 GSM</option><option value="120">120 GSM</option><option value="140">140 GSM</option><option value="150">150 GSM</option><option value="180">180 GSM</option><option value="200">200 GSM</option><option value="220">220 GSM</option></select></div>
@@ -3165,10 +3167,7 @@ export default function Production() {
             </div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Reference Name (Optional)</label><input type="text" placeholder="e.g. SRI VARI PACKS Top Side Tray Box Run" value={uBoxCustomerName} onChange={e => setUBoxCustomerName(e.target.value)} className="form-control" /></div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={uBoxDateOfFinish || ''} onChange={e => setUBoxDateOfFinish(e.target.value)} className="form-control" /></div>
-            <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-              <button type="button" onClick={() => setUBoxShowAdvanced(!uBoxShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{uBoxShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {uBoxShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={uBoxFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setUBoxFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={uBoxQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setUBoxQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
-            </div>
+
           {editingId && (editingType === 'top_side_tray_box' || editingType === 'topSideTray' || editingType === 'top_side_tray') ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
               <button
@@ -3288,7 +3287,8 @@ export default function Production() {
                 reelSizeMinus: uTypeReelSizeMinus,
                 cutSizePlus: uTypeCutSizePlus,
                 cutSizeMinus: uTypeCutSizeMinus,
-                hasPacking: uTypeHasPacking
+                hasPacking: uTypeHasPacking,
+                qtyData: uTypeQtyData
               }}
               setState={{
                 setCompanyId: setUTypeCompanyId,
@@ -3303,7 +3303,8 @@ export default function Production() {
                 setReelSizeMinus: setUTypeReelSizeMinus,
                 setCutSizePlus: setUTypeCutSizePlus,
                 setCutSizeMinus: setUTypeCutSizeMinus,
-                setHasPacking: setUTypeHasPacking
+                setHasPacking: setUTypeHasPacking,
+                setQtyData: setUTypeQtyData
               }}
               showH={true}
             />
@@ -3312,10 +3313,7 @@ export default function Production() {
             </div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Reference Name (Optional)</label><input type="text" placeholder="e.g. SRI VARI PACKS Universal Type Run" value={uTypeCustomerName} onChange={e => setUTypeCustomerName(e.target.value)} className="form-control" /></div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={uTypeDateOfFinish || ''} onChange={e => setUTypeDateOfFinish(e.target.value)} className="form-control" /></div>
-            <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-              <button type="button" onClick={() => setUTypeShowAdvanced(!uTypeShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{uTypeShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {uTypeShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={uTypeFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setUTypeFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={uTypeQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setUTypeQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
-            </div>
+
           {editingId && (editingType === 'universal' || editingType === 'universal_type') ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
               <button
@@ -3432,7 +3430,8 @@ export default function Production() {
                 reelSizeMinus: fcBoxReelSizeMinus,
                 cutSizePlus: fcBoxCutSizePlus,
                 cutSizeMinus: fcBoxCutSizeMinus,
-                hasPacking: fcBoxHasPacking
+                hasPacking: fcBoxHasPacking,
+                qtyData: fcBoxQtyData
               }}
               setState={{
                 setCompanyId: setFcBoxCompanyId,
@@ -3447,7 +3446,8 @@ export default function Production() {
                 setReelSizeMinus: setFcBoxReelSizeMinus,
                 setCutSizePlus: setFcBoxCutSizePlus,
                 setCutSizeMinus: setFcBoxCutSizeMinus,
-                setHasPacking: setFcBoxHasPacking
+                setHasPacking: setFcBoxHasPacking,
+                setQtyData: setFcBoxQtyData
               }}
               showH={true}
             />
@@ -3456,10 +3456,7 @@ export default function Production() {
             </div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Reference Name (Optional)</label><input type="text" placeholder="e.g. SRI VARI PACKS Full Closing Run" value={fcBoxCustomerName} onChange={e => setFcBoxCustomerName(e.target.value)} className="form-control" /></div>
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label">Date of Finish (Optional)</label><input type="date" value={formatToIsoDate(fcBoxDateOfFinish)} onChange={e => setFcBoxDateOfFinish(e.target.value)} className="form-control" /></div>
-            <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-              <button type="button" onClick={() => setFcBoxShowAdvanced(!fcBoxShowAdvanced)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600', padding: '4px 0', width: '100%', justifyContent: 'space-between' }}><span>Advanced Calculation Parameters</span>{fcBoxShowAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</button>
-              {fcBoxShowAdvanced && (<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }} className="form-grid animate-fade"><div className="form-group"><label className="form-label">Flute Extra (%)</label><input type="text" inputMode="decimal" value={fcBoxFluteExtraPercent} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setFcBoxFluteExtraPercent(val); }} className="form-control" placeholder="e.g. 45" /></div><div className="form-group"><label className="form-label">Quantity Data (Multiplier)</label><input type="text" inputMode="decimal" value={fcBoxQtyData} onChange={e => { const val = sanitizeUnsignedDecimalInput(e.target.value); if (val !== null) setFcBoxQtyData(val); }} className="form-control" placeholder="e.g. 2" /></div></div>)}
-            </div>
+
           {editingId && (editingType === 'full_closing' || editingType === 'fullClosing' || editingType === 'full_closing_box') ? (
             <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
               <button

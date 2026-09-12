@@ -334,7 +334,7 @@ router.get('/', auth, async (req, res) => {
       const useDup = c.is_duplex !== undefined && c.is_duplex !== null ? !!c.is_duplex : isDuplex;
       const dupP = c.duplex_price !== undefined && c.duplex_price !== null ? Number(c.duplex_price) : duplexPrice;
       const useLam = c.is_laminated !== undefined && c.is_laminated !== null ? !!c.is_laminated : isLaminated;
-      const lamP = c.lamination_price !== undefined && c.lamination_price !== null ? Number(c.lamination_price) : laminationPrice;
+      const lamP = laminationPrice > 0 ? laminationPrice : (c.lamination_price !== undefined && c.lamination_price !== null ? Number(c.lamination_price) : 0);
       let extraMeta = null;
       const extraMatchRec = custNameRaw.match(/\[ExtraChargesMeta:\s*(\{.*?\})\]/i);
       if (extraMatchRec) {
@@ -949,7 +949,7 @@ router.get('/:id', auth, async (req, res) => {
       const useDup = calc.is_duplex !== undefined && calc.is_duplex !== null ? !!calc.is_duplex : isDuplex;
       const dupP = calc.duplex_price !== undefined && calc.duplex_price !== null ? Number(calc.duplex_price) : duplexPrice;
       const useLam = calc.is_laminated !== undefined && calc.is_laminated !== null ? !!calc.is_laminated : isLaminated;
-      const lamP = calc.lamination_price !== undefined && calc.lamination_price !== null ? Number(calc.lamination_price) : laminationPrice;
+      const lamP = laminationPrice > 0 ? laminationPrice : (calc.lamination_price !== undefined && calc.lamination_price !== null ? Number(calc.lamination_price) : 0);
       let extraMetaSingle = null;
       const extraMatchSingle = custNameRaw.match(/\[ExtraChargesMeta:\s*(\{.*?\})\]/i);
       if (extraMatchSingle) {
