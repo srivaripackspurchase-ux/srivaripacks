@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  Building, 
-  Ruler, 
-  Edit3, 
-  PlusCircle, 
-  Trash2, 
-  CheckCircle2, 
-  AlertCircle, 
-  X, 
-  Layers, 
-  ChevronRight, 
-  Save, 
+import {
+  Building,
+  Ruler,
+  Edit3,
+  PlusCircle,
+  Trash2,
+  CheckCircle2,
+  AlertCircle,
+  X,
+  Layers,
+  ChevronRight,
+  Save,
   ArrowLeft,
   Search,
   Check
@@ -85,18 +85,18 @@ export default function CompanyManagement() {
 
   // Dynamic Size Rows for Add Mode
   const [sizeRows, setSizeRows] = useState([
-    { 
-      id: 1, 
+    {
+      id: 1,
       partitionType: 'paired',
-      slot1Length: '', 
-      slot1Height: '', 
+      slot1Length: '',
+      slot1Height: '',
       slot1Count: 1,
-      slot2Length: '', 
-      slot2Height: '', 
+      slot2Length: '',
+      slot2Height: '',
       slot2Count: 1,
-      length: '', 
-      width: '', 
-      height: '', 
+      length: '',
+      width: '',
+      height: '',
       unit: 'inch',
       slotCount: 1
     }
@@ -127,10 +127,10 @@ export default function CompanyManagement() {
   // Filter companies available for selected calculation category in Edit Mode
   const filteredCompaniesForCategory = useMemo(() => {
     if (!selectedCalcCategory) return companies;
-    return companies.filter(c => 
-      !c.available_types || 
-      c.available_types.length === 0 || 
-      c.available_types.includes('all') || 
+    return companies.filter(c =>
+      !c.available_types ||
+      c.available_types.length === 0 ||
+      c.available_types.includes('all') ||
       c.available_types.includes(selectedCalcCategory)
     );
   }, [companies, selectedCalcCategory]);
@@ -354,7 +354,7 @@ export default function CompanyManagement() {
     try {
       if (selectedCalcCategory === 'partition') {
         const u = editPartitionForm.unit || 'mm';
-        
+
         if (editingSizeGroup.type === 'paired') {
           const l1 = Number(editPartitionForm.slot1Length) || 0;
           const h1 = Number(editPartitionForm.slot1Height) || 0;
@@ -491,18 +491,18 @@ export default function CompanyManagement() {
     const defaultUnit = (CALC_CATEGORIES.find(c => c.id === addCalcCategory) || {}).defaultUnit || 'mm';
     setSizeRows(prev => [
       ...prev,
-      { 
-        id: Date.now() + Math.random(), 
+      {
+        id: Date.now() + Math.random(),
         partitionType: 'paired',
-        slot1Length: '', 
-        slot1Height: '', 
+        slot1Length: '',
+        slot1Height: '',
         slot1Count: 1,
-        slot2Length: '', 
-        slot2Height: '', 
+        slot2Length: '',
+        slot2Height: '',
         slot2Count: 1,
-        length: '', 
-        width: '', 
-        height: '', 
+        length: '',
+        width: '',
+        height: '',
         unit: defaultUnit,
         slotCount: 1
       }
@@ -662,15 +662,15 @@ export default function CompanyManagement() {
       if (!sizesRes.ok) throw new Error(sizesData.message || 'Error adding company sizes');
 
       showToast(`Company "${companyName}" with size presets added successfully!`, 'success');
-      
+
       // Reset form
       setAddCompanyName('');
-      setSizeRows([{ 
-        id: Date.now(), 
+      setSizeRows([{
+        id: Date.now(),
         partitionType: 'paired',
         slot1Length: '', slot1Height: '', slot1Count: 1,
         slot2Length: '', slot2Height: '', slot2Count: 1,
-        length: '', width: '', height: '', unit: catConfig.defaultUnit 
+        length: '', width: '', height: '', unit: catConfig.defaultUnit
       }]);
       fetchCompanies();
       setActiveMode('edit');
@@ -686,7 +686,7 @@ export default function CompanyManagement() {
 
   return (
     <div className="page-container animate-fade">
-      
+
       {/* Top Header Navigation */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
@@ -704,15 +704,15 @@ export default function CompanyManagement() {
         </div>
 
         {activeMode && (
-          <button 
+          <button
             onClick={() => setActiveMode(null)}
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '8px', 
-              padding: '10px 18px', 
-              borderRadius: 'var(--radius-md)', 
-              backgroundColor: 'var(--bg-secondary)', 
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '10px 18px',
+              borderRadius: 'var(--radius-md)',
+              backgroundColor: 'var(--bg-secondary)',
               border: '1px solid var(--border-color)',
               color: 'var(--text-primary)',
               cursor: 'pointer',
@@ -731,14 +731,14 @@ export default function CompanyManagement() {
       {/* ===================================================================== */}
       {!activeMode && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', marginTop: '10px' }}>
-          
+
           {/* Card 1: Edit Company & Company Sizes */}
-          <div 
+          <div
             onClick={() => setActiveMode('edit')}
             className="glass-panel"
-            style={{ 
-              padding: '32px', 
-              borderRadius: 'var(--radius-lg)', 
+            style={{
+              padding: '32px',
+              borderRadius: 'var(--radius-lg)',
               border: '1px solid var(--border-color)',
               cursor: 'pointer',
               transition: 'all 0.3s ease',
@@ -761,11 +761,11 @@ export default function CompanyManagement() {
             }} />
 
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <div style={{ 
-                width: '56px', 
-                height: '56px', 
-                borderRadius: '14px', 
-                backgroundColor: 'rgba(99, 102, 241, 0.15)', 
+              <div style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '14px',
+                backgroundColor: 'rgba(99, 102, 241, 0.15)',
                 color: 'var(--color-accent)',
                 display: 'flex',
                 alignItems: 'center',
@@ -778,17 +778,17 @@ export default function CompanyManagement() {
               <h2 style={{ fontSize: '1.4rem', fontWeight: 800, fontFamily: 'var(--font-heading)', margin: '0 0 10px 0' }}>
                 Edit Company & Company Sizes
               </h2>
-              
+
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: '1.5', margin: '0 0 24px 0' }}>
                 Select a specific calculation category (Standard Box, Pad, Partition, etc.), pick an existing company, and edit or update dimensions, labels, and units directly in Supabase.
               </p>
             </div>
 
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'space-between', 
-              fontWeight: 700, 
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              fontWeight: 700,
               color: 'var(--color-accent)',
               fontSize: '0.95rem',
               paddingTop: '16px',
@@ -802,12 +802,12 @@ export default function CompanyManagement() {
           </div>
 
           {/* Card 2: Add New Company & Company Sizes */}
-          <div 
+          <div
             onClick={() => setActiveMode('add')}
             className="glass-panel"
-            style={{ 
-              padding: '32px', 
-              borderRadius: 'var(--radius-lg)', 
+            style={{
+              padding: '32px',
+              borderRadius: 'var(--radius-lg)',
               border: '1px solid var(--border-color)',
               cursor: 'pointer',
               transition: 'all 0.3s ease',
@@ -830,11 +830,11 @@ export default function CompanyManagement() {
             }} />
 
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <div style={{ 
-                width: '56px', 
-                height: '56px', 
-                borderRadius: '14px', 
-                backgroundColor: 'rgba(16, 185, 129, 0.15)', 
+              <div style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '14px',
+                backgroundColor: 'rgba(16, 185, 129, 0.15)',
                 color: '#10b981',
                 display: 'flex',
                 alignItems: 'center',
@@ -847,17 +847,17 @@ export default function CompanyManagement() {
               <h2 style={{ fontSize: '1.4rem', fontWeight: 800, fontFamily: 'var(--font-heading)', margin: '0 0 10px 0' }}>
                 Add New Company & Sizes
               </h2>
-              
+
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: '1.5', margin: '0 0 24px 0' }}>
                 Create a new company or add custom size presets under any calculation type. Supports multi-size dynamic creation with custom dimension units (<code style={{ color: '#10b981' }}>mm</code> or <code style={{ color: '#10b981' }}>inch</code>).
               </p>
             </div>
 
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'space-between', 
-              fontWeight: 700, 
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              fontWeight: 700,
               color: '#10b981',
               fontSize: '0.95rem',
               paddingTop: '16px',
@@ -878,13 +878,13 @@ export default function CompanyManagement() {
       {/* ===================================================================== */}
       {activeMode === 'edit' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          
+
           {/* Step 1: Select Calculation Category */}
           <div className="glass-panel" style={{ padding: '24px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>
               Step 1: Select Calculation Type
             </label>
-            
+
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '12px' }}>
               {CALC_CATEGORIES.map(cat => {
                 const isSelected = selectedCalcCategory === cat.id;
@@ -996,8 +996,8 @@ export default function CompanyManagement() {
                       <th style={{ padding: '16px 20px' }}>Size Label Output</th>
                       {selectedCalcCategory === 'partition' ? (
                         <>
-                          <th style={{ padding: '16px 20px' }}>Slot 1 Details (L × H)</th>
-                          <th style={{ padding: '16px 20px' }}>Slot 2 Details (L × H)</th>
+                          <th style={{ padding: '16px 20px' }}>Slot 1 Details (H × L)</th>
+                          <th style={{ padding: '16px 20px' }}>Slot 2 Details (H × W)</th>
                         </>
                       ) : (
                         <>
@@ -1106,13 +1106,13 @@ export default function CompanyManagement() {
       {/* ===================================================================== */}
       {activeMode === 'add' && (
         <form onSubmit={handleSubmitAddCompanyAndSizes} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          
+
           {/* Step 1: Select Calculation Category */}
           <div className="glass-panel" style={{ padding: '24px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>
               Step 1: Select Calculation Category for New Entry
             </label>
-            
+
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '12px' }}>
               {CALC_CATEGORIES.map(cat => {
                 const isSelected = addCalcCategory === cat.id;
@@ -1192,7 +1192,7 @@ export default function CompanyManagement() {
 
             {isNewCompanyInput ? (
               <div>
-                <input 
+                <input
                   type="text"
                   placeholder="Enter New Company Name (e.g. SRI VARI PACKAGING CORP)..."
                   value={addCompanyName}
@@ -1259,12 +1259,12 @@ export default function CompanyManagement() {
             {addCalcCategory === 'partition' ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {sizeRows.map((row, idx) => (
-                  <div 
-                    key={row.id} 
-                    style={{ 
-                      padding: '20px', 
-                      borderRadius: 'var(--radius-md)', 
-                      backgroundColor: 'var(--bg-secondary)', 
+                  <div
+                    key={row.id}
+                    style={{
+                      padding: '20px',
+                      borderRadius: 'var(--radius-md)',
+                      backgroundColor: 'var(--bg-secondary)',
                       border: '1px solid var(--border-color)',
                       display: 'flex',
                       flexDirection: 'column',
@@ -1285,7 +1285,7 @@ export default function CompanyManagement() {
                           <option value="paired">Paired Partition (Slot 1 + Slot 2)</option>
                           <option value="single">Single Partition</option>
                         </select>
-                        
+
                         <button
                           type="button"
                           onClick={() => handleRemoveSizeRow(row.id)}
@@ -1313,8 +1313,8 @@ export default function CompanyManagement() {
                           </label>
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 80px', gap: '10px' }}>
                             <div>
-                              <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Length</label>
-                              <input 
+                              <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Height</label>
+                              <input
                                 type="number" step="any" placeholder="e.g. 230"
                                 value={row.slot1Length}
                                 onChange={(e) => handleSizeRowChange(row.id, 'slot1Length', e.target.value)}
@@ -1322,8 +1322,8 @@ export default function CompanyManagement() {
                               />
                             </div>
                             <div>
-                              <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Height</label>
-                              <input 
+                              <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Length</label>
+                              <input
                                 type="number" step="any" placeholder="e.g. 65"
                                 value={row.slot1Height}
                                 onChange={(e) => handleSizeRowChange(row.id, 'slot1Height', e.target.value)}
@@ -1332,7 +1332,7 @@ export default function CompanyManagement() {
                             </div>
                             <div>
                               <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Slots</label>
-                              <input 
+                              <input
                                 type="number" min="1" placeholder="1"
                                 value={row.slot1Count}
                                 onChange={(e) => handleSizeRowChange(row.id, 'slot1Count', e.target.value)}
@@ -1349,8 +1349,8 @@ export default function CompanyManagement() {
                           </label>
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 80px', gap: '10px' }}>
                             <div>
-                              <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Length</label>
-                              <input 
+                              <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Height</label>
+                              <input
                                 type="number" step="any" placeholder="e.g. 290"
                                 value={row.slot2Length}
                                 onChange={(e) => handleSizeRowChange(row.id, 'slot2Length', e.target.value)}
@@ -1358,8 +1358,8 @@ export default function CompanyManagement() {
                               />
                             </div>
                             <div>
-                              <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Height</label>
-                              <input 
+                              <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Width</label>
+                              <input
                                 type="number" step="any" placeholder="e.g. 110"
                                 value={row.slot2Height}
                                 onChange={(e) => handleSizeRowChange(row.id, 'slot2Height', e.target.value)}
@@ -1368,7 +1368,7 @@ export default function CompanyManagement() {
                             </div>
                             <div>
                               <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Slots</label>
-                              <input 
+                              <input
                                 type="number" min="1" placeholder="1"
                                 value={row.slot2Count}
                                 onChange={(e) => handleSizeRowChange(row.id, 'slot2Count', e.target.value)}
@@ -1398,7 +1398,7 @@ export default function CompanyManagement() {
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 100px 120px', gap: '16px', alignItems: 'center' }}>
                         <div>
                           <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px' }}>Length</label>
-                          <input 
+                          <input
                             type="number" step="any" placeholder="e.g. 230"
                             value={row.slot1Length}
                             onChange={(e) => handleSizeRowChange(row.id, 'slot1Length', e.target.value)}
@@ -1407,7 +1407,7 @@ export default function CompanyManagement() {
                         </div>
                         <div>
                           <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px' }}>Height</label>
-                          <input 
+                          <input
                             type="number" step="any" placeholder="e.g. 65"
                             value={row.slot1Height}
                             onChange={(e) => handleSizeRowChange(row.id, 'slot1Height', e.target.value)}
@@ -1416,7 +1416,7 @@ export default function CompanyManagement() {
                         </div>
                         <div>
                           <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px' }}>Slots</label>
-                          <input 
+                          <input
                             type="number" min="1" placeholder="1"
                             value={row.slot1Count}
                             onChange={(e) => handleSizeRowChange(row.id, 'slot1Count', e.target.value)}
@@ -1446,12 +1446,12 @@ export default function CompanyManagement() {
                 return (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     {sizeRows.map((row, idx) => (
-                      <div 
-                        key={row.id} 
-                        style={{ 
-                          padding: '18px', 
-                          borderRadius: 'var(--radius-md)', 
-                          backgroundColor: 'var(--bg-secondary)', 
+                      <div
+                        key={row.id}
+                        style={{
+                          padding: '18px',
+                          borderRadius: 'var(--radius-md)',
+                          backgroundColor: 'var(--bg-secondary)',
                           border: '1px solid var(--border-color)',
                           display: 'grid',
                           gridTemplateColumns: catConfig.dimCount === 3 ? '1fr 1fr 1fr 120px auto' : '1fr 1fr 120px auto',
@@ -1464,7 +1464,7 @@ export default function CompanyManagement() {
                           <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px' }}>
                             {catConfig.labels[0]}
                           </label>
-                          <input 
+                          <input
                             type="number" step="any"
                             placeholder={`e.g. ${catConfig.defaultUnit === 'inch' ? '12.5' : '350'}`}
                             value={row.length}
@@ -1478,7 +1478,7 @@ export default function CompanyManagement() {
                           <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px' }}>
                             {catConfig.labels[1]}
                           </label>
-                          <input 
+                          <input
                             type="number" step="any"
                             placeholder={`e.g. ${catConfig.defaultUnit === 'inch' ? '10' : '250'}`}
                             value={row.width}
@@ -1493,7 +1493,7 @@ export default function CompanyManagement() {
                             <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px' }}>
                               {catConfig.labels[2]}
                             </label>
-                            <input 
+                            <input
                               type="number" step="any"
                               placeholder={`e.g. ${catConfig.defaultUnit === 'inch' ? '8.5' : '150'}`}
                               value={row.height}
@@ -1623,7 +1623,7 @@ export default function CompanyManagement() {
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
                   New Company Name
                 </label>
-                <input 
+                <input
                   type="text"
                   value={editCompanyNameInput}
                   onChange={(e) => setEditCompanyNameInput(e.target.value)}
@@ -1645,9 +1645,9 @@ export default function CompanyManagement() {
                     backgroundColor: editScope === 'scoped' ? 'rgba(99, 102, 241, 0.15)' : 'var(--bg-secondary)',
                     cursor: 'pointer'
                   }}>
-                    <input 
-                      type="radio" 
-                      name="editScope" 
+                    <input
+                      type="radio"
+                      name="editScope"
                       value="scoped"
                       checked={editScope === 'scoped'}
                       onChange={() => setEditScope('scoped')}
@@ -1669,9 +1669,9 @@ export default function CompanyManagement() {
                     backgroundColor: editScope === 'global' ? 'rgba(99, 102, 241, 0.15)' : 'var(--bg-secondary)',
                     cursor: 'pointer'
                   }}>
-                    <input 
-                      type="radio" 
-                      name="editScope" 
+                    <input
+                      type="radio"
+                      name="editScope"
                       value="global"
                       checked={editScope === 'global'}
                       onChange={() => setEditScope('global')}
@@ -1766,9 +1766,9 @@ export default function CompanyManagement() {
                     backgroundColor: deleteScope === 'scoped' ? 'rgba(239, 68, 68, 0.12)' : 'var(--bg-secondary)',
                     cursor: 'pointer'
                   }}>
-                    <input 
-                      type="radio" 
-                      name="deleteScope" 
+                    <input
+                      type="radio"
+                      name="deleteScope"
                       value="scoped"
                       checked={deleteScope === 'scoped'}
                       onChange={() => setDeleteScope('scoped')}
@@ -1790,9 +1790,9 @@ export default function CompanyManagement() {
                     backgroundColor: deleteScope === 'global' ? 'rgba(239, 68, 68, 0.12)' : 'var(--bg-secondary)',
                     cursor: 'pointer'
                   }}>
-                    <input 
-                      type="radio" 
-                      name="deleteScope" 
+                    <input
+                      type="radio"
+                      name="deleteScope"
                       value="global"
                       checked={deleteScope === 'global'}
                       onChange={() => setDeleteScope('global')}
@@ -1872,7 +1872,7 @@ export default function CompanyManagement() {
                   {selectedCalcCategory === 'partition' ? 'Edit Partition Details & Slots' : 'Edit Size Record'}
                 </h3>
               </div>
-              <button 
+              <button
                 onClick={() => setEditingSizeGroup(null)}
                 style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
               >
@@ -1892,7 +1892,7 @@ export default function CompanyManagement() {
                         </h4>
                         <div style={{ marginBottom: '12px' }}>
                           <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>Length</label>
-                          <input 
+                          <input
                             type="number" step="any" value={editPartitionForm.slot1Length}
                             onChange={(e) => setEditPartitionForm({ ...editPartitionForm, slot1Length: e.target.value })}
                             className="form-control" style={{ width: '100%' }} required
@@ -1900,7 +1900,7 @@ export default function CompanyManagement() {
                         </div>
                         <div style={{ marginBottom: '12px' }}>
                           <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>Height</label>
-                          <input 
+                          <input
                             type="number" step="any" value={editPartitionForm.slot1Height}
                             onChange={(e) => setEditPartitionForm({ ...editPartitionForm, slot1Height: e.target.value })}
                             className="form-control" style={{ width: '100%' }} required
@@ -1908,7 +1908,7 @@ export default function CompanyManagement() {
                         </div>
                         <div>
                           <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>Slot Count</label>
-                          <input 
+                          <input
                             type="number" min="1" value={editPartitionForm.slot1Count}
                             onChange={(e) => setEditPartitionForm({ ...editPartitionForm, slot1Count: e.target.value })}
                             className="form-control" style={{ width: '100%' }} required
@@ -1923,7 +1923,7 @@ export default function CompanyManagement() {
                         </h4>
                         <div style={{ marginBottom: '12px' }}>
                           <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>Length</label>
-                          <input 
+                          <input
                             type="number" step="any" value={editPartitionForm.slot2Length}
                             onChange={(e) => setEditPartitionForm({ ...editPartitionForm, slot2Length: e.target.value })}
                             className="form-control" style={{ width: '100%' }} required
@@ -1931,7 +1931,7 @@ export default function CompanyManagement() {
                         </div>
                         <div style={{ marginBottom: '12px' }}>
                           <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>Height</label>
-                          <input 
+                          <input
                             type="number" step="any" value={editPartitionForm.slot2Height}
                             onChange={(e) => setEditPartitionForm({ ...editPartitionForm, slot2Height: e.target.value })}
                             className="form-control" style={{ width: '100%' }} required
@@ -1939,7 +1939,7 @@ export default function CompanyManagement() {
                         </div>
                         <div>
                           <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>Slot Count</label>
-                          <input 
+                          <input
                             type="number" min="1" value={editPartitionForm.slot2Count}
                             onChange={(e) => setEditPartitionForm({ ...editPartitionForm, slot2Count: e.target.value })}
                             className="form-control" style={{ width: '100%' }} required
@@ -1951,7 +1951,7 @@ export default function CompanyManagement() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
                       <div>
                         <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>Length</label>
-                        <input 
+                        <input
                           type="number" step="any" value={editPartitionForm.slot1Length}
                           onChange={(e) => setEditPartitionForm({ ...editPartitionForm, slot1Length: e.target.value })}
                           className="form-control" style={{ width: '100%' }} required
@@ -1959,7 +1959,7 @@ export default function CompanyManagement() {
                       </div>
                       <div>
                         <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>Height</label>
-                        <input 
+                        <input
                           type="number" step="any" value={editPartitionForm.slot1Height}
                           onChange={(e) => setEditPartitionForm({ ...editPartitionForm, slot1Height: e.target.value })}
                           className="form-control" style={{ width: '100%' }} required
@@ -1967,7 +1967,7 @@ export default function CompanyManagement() {
                       </div>
                       <div>
                         <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>Slot Count</label>
-                        <input 
+                        <input
                           type="number" min="1" value={editPartitionForm.slot1Count}
                           onChange={(e) => setEditPartitionForm({ ...editPartitionForm, slot1Count: e.target.value })}
                           className="form-control" style={{ width: '100%' }} required
@@ -1996,7 +1996,7 @@ export default function CompanyManagement() {
                     <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
                       Length
                     </label>
-                    <input 
+                    <input
                       type="number" step="any"
                       value={editSizeForm.length}
                       onChange={(e) => setEditSizeForm({ ...editSizeForm, length: e.target.value })}
@@ -2008,7 +2008,7 @@ export default function CompanyManagement() {
                     <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
                       Width
                     </label>
-                    <input 
+                    <input
                       type="number" step="any"
                       value={editSizeForm.width}
                       onChange={(e) => setEditSizeForm({ ...editSizeForm, width: e.target.value })}
@@ -2021,7 +2021,7 @@ export default function CompanyManagement() {
                       <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
                         Height
                       </label>
-                      <input 
+                      <input
                         type="number" step="any"
                         value={editSizeForm.height}
                         onChange={(e) => setEditSizeForm({ ...editSizeForm, height: e.target.value })}

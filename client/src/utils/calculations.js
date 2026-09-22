@@ -429,6 +429,10 @@ export function calculatePairedPartitionPricing({
   gstPercent,
   reelSizeAdjust = 0,
   cutSizeAdjust = 0,
+  firstReelSizeAdjust = reelSizeAdjust,
+  firstCutSizeAdjust = cutSizeAdjust,
+  secondReelSizeAdjust = reelSizeAdjust,
+  secondCutSizeAdjust = cutSizeAdjust,
   gsmPaper = 150,
   gsmFlute = 150,
   gsmPacking = 150
@@ -444,16 +448,16 @@ export function calculatePairedPartitionPricing({
   const totalPF = paper + flute;
 
   // First partition: Width→Reel, Length→Cut
-  const firstReelSize = first.W + Number(reelSizeAdjust);
-  const firstCutSize = first.L + Number(cutSizeAdjust);
+  const firstReelSize = first.W + Number(firstReelSizeAdjust);
+  const firstCutSize = first.L + Number(firstCutSizeAdjust);
   const firstWeightPerUnit = (firstReelSize * firstCutSize * totalPF) / 1550000;
   // Box weight uses SECOND partition's slot count
   const firstBoxWeight = Number(set) * second.slotCount * firstWeightPerUnit;
   const firstPrice = firstBoxWeight * Number(pricePerKg);
 
   // Second partition: Width→Reel, Length→Cut
-  const secondReelSize = second.W + Number(reelSizeAdjust);
-  const secondCutSize = second.L + Number(cutSizeAdjust);
+  const secondReelSize = second.W + Number(secondReelSizeAdjust);
+  const secondCutSize = second.L + Number(secondCutSizeAdjust);
   const secondWeightPerUnit = (secondReelSize * secondCutSize * totalPF) / 1550000;
   // Box weight uses FIRST partition's slot count
   const secondBoxWeight = Number(set) * first.slotCount * secondWeightPerUnit;
@@ -867,6 +871,10 @@ export function calculateUniversalTypePricing({
   gstPercent,
   reelSizeAdjust = 0,
   cutSizeAdjust = 0,
+  topReelSizeAdjust = reelSizeAdjust,
+  topCutSizeAdjust = cutSizeAdjust,
+  bottomReelSizeAdjust = reelSizeAdjust,
+  bottomCutSizeAdjust = cutSizeAdjust,
   gsmPaper = 150,
   gsmFlute = 150,
   gsmPacking = 150,
@@ -883,11 +891,21 @@ export function calculateUniversalTypePricing({
   const paperPlies = plies.paper;
   const flutePlies = plies.flute;
 
-  // 1. Reel Size = L + H + H + 1 + reelSizeAdjust  (note: L, not W)
-  const reelSize = L + H + H + 1 + Number(reelSizeAdjust);
+  // Raw base size before adjustment
+  const rawBaseReel = L + H + H + 1;
+  const rawBaseCut = W + H + H + 1;
 
-  // 2. Cut Size = W + H + H + 1 + cutSizeAdjust  (note: W, not L)
-  const cutSize = W + H + H + 1 + Number(cutSizeAdjust);
+  // 1. Top Reel & Cut (with +0.5" extra for top part)
+  const topReelSize = rawBaseReel + Number(topReelSizeAdjust);
+  const topCutSize = rawBaseCut + Number(topCutSizeAdjust);
+
+  // 2. Bottom Reel & Cut (raw size)
+  const bottomReelSize = rawBaseReel + Number(bottomReelSizeAdjust);
+  const bottomCutSize = rawBaseCut + Number(bottomCutSizeAdjust);
+
+  // General fallback for backward compatibility
+  const reelSize = bottomReelSize;
+  const cutSize = bottomCutSize;
 
   // 3. Paper = ((paperPlies - 1) * gsmPaper) + (1 * gsmPacking)
   const paper = ((paperPlies - 1) * Number(gsmPaper)) + (1 * Number(gsmPacking));
@@ -898,13 +916,13 @@ export function calculateUniversalTypePricing({
   // 5. Total P+F
   const totalPF = paper + flute;
 
-  // 6. Top Weight = (reelSize + 0.5) * (cutSize + 0.5) * totalPF / 1,550,000
+  // 6. Top Weight = (topReelSize + 0.5) * (topCutSize + 0.5) * totalPF / 1,550,000
   //    Extra 0.5 inch added to BOTH reel and cut for the top only
-  const topWeight = ((reelSize + 0.5) * (cutSize + 0.5) * totalPF) / 1550000;
+  const topWeight = ((topReelSize + 0.5) * (topCutSize + 0.5) * totalPF) / 1550000;
 
-  // 7. Bottom Weight = reelSize * cutSize * totalPF / 1,550,000
-  //    No extra — uses raw reel/cut sizes
-  const bottomWeight = (reelSize * cutSize * totalPF) / 1550000;
+  // 7. Bottom Weight = bottomReelSize * bottomCutSize * totalPF / 1,550,000
+  //    No extra — uses bottom reel/cut sizes
+  const bottomWeight = (bottomReelSize * bottomCutSize * totalPF) / 1550000;
 
   // 8. Weight per unit = topWeight + bottomWeight (1 top + 1 bottom = 1 box)
   const weightPerUnit = topWeight + bottomWeight;
@@ -934,6 +952,12 @@ export function calculateUniversalTypePricing({
   const grandTotal = allCostsBeforeGST + gstAmount;
 
   return {
+    rawBaseReel,
+    rawBaseCut,
+    topReelSize,
+    topCutSize,
+    bottomReelSize,
+    bottomCutSize,
     reelSize,
     cutSize,
     paper,

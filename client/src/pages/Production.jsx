@@ -263,62 +263,310 @@ const ProductionFormFields = ({ companies, prefix, state, setState, showH = true
           {bfOptions.map(v => <option key={v} value={v}>{v} BF</option>)}
         </select>
       </div>
-      <div className="form-group">
-        <label className="form-label">Reel Size (+)</label>
-        <input 
-          type="text" 
-          inputMode="decimal"
-          value={state.reelSizePlus} 
-          onChange={e => {
-            const val = sanitizeUnsignedDecimalInput(e.target.value);
-            if (val !== null) setState.setReelSizePlus(val);
-          }} 
-          className="form-control" 
-          placeholder="e.g. 0.5" 
-        />
-      </div>
-      <div className="form-group">
-        <label className="form-label">Reel Size (-)</label>
-        <input 
-          type="text" 
-          inputMode="decimal"
-          value={state.reelSizeMinus} 
-          onChange={e => {
-            const val = sanitizeUnsignedDecimalInput(e.target.value);
-            if (val !== null) setState.setReelSizeMinus(val);
-          }} 
-          className="form-control" 
-          placeholder="e.g. 0.5" 
-        />
-      </div>
-      <div className="form-group">
-        <label className="form-label">Cut Size (+)</label>
-        <input 
-          type="text" 
-          inputMode="decimal"
-          value={state.cutSizePlus} 
-          onChange={e => {
-            const val = sanitizeUnsignedDecimalInput(e.target.value);
-            if (val !== null) setState.setCutSizePlus(val);
-          }} 
-          className="form-control" 
-          placeholder="e.g. 0.5" 
-        />
-      </div>
-      <div className="form-group">
-        <label className="form-label">Cut Size (-)</label>
-        <input 
-          type="text" 
-          inputMode="decimal"
-          value={state.cutSizeMinus} 
-          onChange={e => {
-            const val = sanitizeUnsignedDecimalInput(e.target.value);
-            if (val !== null) setState.setCutSizeMinus(val);
-          }} 
-          className="form-control" 
-          placeholder="e.g. 0.5" 
-        />
-      </div>
+      {calcType === 'partition' ? (
+        <>
+          <div className="form-group" style={{ gridColumn: 'span 2', marginTop: '8px', marginBottom: '-8px' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--color-accent)' }}>First Partition Adjustments</span>
+          </div>
+          <div className="form-group">
+            <label className="form-label">First Reel Size (+)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.firstReelSizePlus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setFirstReelSizePlus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">First Reel Size (-)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.firstReelSizeMinus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setFirstReelSizeMinus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">First Cut Size (+)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.firstCutSizePlus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setFirstCutSizePlus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">First Cut Size (-)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.firstCutSizeMinus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setFirstCutSizeMinus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+
+          <div className="form-group" style={{ gridColumn: 'span 2', marginTop: '8px', marginBottom: '-8px' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'hsl(38, 92%, 50%)' }}>Second Partition Adjustments</span>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Second Reel Size (+)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.secondReelSizePlus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setSecondReelSizePlus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Second Reel Size (-)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.secondReelSizeMinus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setSecondReelSizeMinus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Second Cut Size (+)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.secondCutSizePlus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setSecondCutSizePlus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Second Cut Size (-)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.secondCutSizeMinus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setSecondCutSizeMinus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+        </>
+      ) : calcType === 'universal' ? (
+        <>
+          <div className="form-group" style={{ gridColumn: 'span 2', marginTop: '8px', marginBottom: '-8px' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'hsl(200, 70%, 50%)' }}>Top Part Adjustments</span>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Top Reel Size (+)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.topReelSizePlus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setTopReelSizePlus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Top Reel Size (-)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.topReelSizeMinus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setTopReelSizeMinus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Top Cut Size (+)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.topCutSizePlus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setTopCutSizePlus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Top Cut Size (-)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.topCutSizeMinus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setTopCutSizeMinus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+
+          <div className="form-group" style={{ gridColumn: 'span 2', marginTop: '8px', marginBottom: '-8px' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'hsl(200, 70%, 40%)' }}>Bottom Part Adjustments</span>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Bottom Reel Size (+)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.bottomReelSizePlus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setBottomReelSizePlus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Bottom Reel Size (-)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.bottomReelSizeMinus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setBottomReelSizeMinus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Bottom Cut Size (+)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.bottomCutSizePlus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setBottomCutSizePlus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Bottom Cut Size (-)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.bottomCutSizeMinus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setBottomCutSizeMinus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="form-group">
+            <label className="form-label">Reel Size (+)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.reelSizePlus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setReelSizePlus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Reel Size (-)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.reelSizeMinus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setReelSizeMinus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Cut Size (+)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.cutSizePlus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setCutSizePlus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Cut Size (-)</label>
+            <input 
+              type="text" 
+              inputMode="decimal"
+              value={state.cutSizeMinus} 
+              onChange={e => {
+                const val = sanitizeUnsignedDecimalInput(e.target.value);
+                if (val !== null) setState.setCutSizeMinus(val);
+              }} 
+              className="form-control" 
+              placeholder="e.g. 0.5" 
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };
@@ -547,10 +795,14 @@ export default function Production() {
   const [partitionGsmPacking, setPartitionGsmPacking] = useState('150');
   const [partitionQtyData, setPartitionQtyData] = useState('1');
   const [partitionSet, setPartitionSet] = useState('1');
-  const [partitionReelSizePlus, setPartitionReelSizePlus] = useState('');
-  const [partitionReelSizeMinus, setPartitionReelSizeMinus] = useState('');
-  const [partitionCutSizePlus, setPartitionCutSizePlus] = useState('');
-  const [partitionCutSizeMinus, setPartitionCutSizeMinus] = useState('');
+  const [partitionFirstReelPlus, setPartitionFirstReelPlus] = useState('');
+  const [partitionFirstReelMinus, setPartitionFirstReelMinus] = useState('');
+  const [partitionFirstCutPlus, setPartitionFirstCutPlus] = useState('');
+  const [partitionFirstCutMinus, setPartitionFirstCutMinus] = useState('');
+  const [partitionSecondReelPlus, setPartitionSecondReelPlus] = useState('');
+  const [partitionSecondReelMinus, setPartitionSecondReelMinus] = useState('');
+  const [partitionSecondCutPlus, setPartitionSecondCutPlus] = useState('');
+  const [partitionSecondCutMinus, setPartitionSecondCutMinus] = useState('');
   const [partitionReelMultiplier, setPartitionReelMultiplier] = useState(1);
   const [partitionCutMultiplier, setPartitionCutMultiplier] = useState(1);
   const [partitionResults, setPartitionResults] = useState(null);
@@ -714,10 +966,14 @@ export default function Production() {
   const [uTypeGsmFlute, setUTypeGsmFlute] = useState('150');
   const [uTypeGsmPacking, setUTypeGsmPacking] = useState('150');
   const [uTypeQtyData, setUTypeQtyData] = useState('1');
-  const [uTypeReelSizePlus, setUTypeReelSizePlus] = useState('');
-  const [uTypeReelSizeMinus, setUTypeReelSizeMinus] = useState('');
-  const [uTypeCutSizePlus, setUTypeCutSizePlus] = useState('');
-  const [uTypeCutSizeMinus, setUTypeCutSizeMinus] = useState('');
+  const [uTypeTopReelPlus, setUTypeTopReelPlus] = useState('');
+  const [uTypeTopReelMinus, setUTypeTopReelMinus] = useState('');
+  const [uTypeTopCutPlus, setUTypeTopCutPlus] = useState('');
+  const [uTypeTopCutMinus, setUTypeTopCutMinus] = useState('');
+  const [uTypeBottomReelPlus, setUTypeBottomReelPlus] = useState('');
+  const [uTypeBottomReelMinus, setUTypeBottomReelMinus] = useState('');
+  const [uTypeBottomCutPlus, setUTypeBottomCutPlus] = useState('');
+  const [uTypeBottomCutMinus, setUTypeBottomCutMinus] = useState('');
   const [uTypeReelMultiplier, setUTypeReelMultiplier] = useState(1);
   const [uTypeCutMultiplier, setUTypeCutMultiplier] = useState(1);
   const [uTypeResults, setUTypeResults] = useState(null);
@@ -958,8 +1214,21 @@ export default function Production() {
                 setPartitionQtyData(item.quantity_of_data);
                 setPartitionSet(item.quantity_of_data);
               }
-              populateAdjust(item.reel_size_adjust, setPartitionReelSizePlus, setPartitionReelSizeMinus);
-              populateAdjust(item.cut_size_adjust, setPartitionCutSizePlus, setPartitionCutSizeMinus);
+              if (hasVal(parsed.firstReelPlus)) {
+                setPartitionFirstReelPlus(String(parsed.firstReelPlus || ''));
+                setPartitionFirstReelMinus(String(parsed.firstReelMinus || ''));
+                setPartitionFirstCutPlus(String(parsed.firstCutPlus || ''));
+                setPartitionFirstCutMinus(String(parsed.firstCutMinus || ''));
+                setPartitionSecondReelPlus(String(parsed.secondReelPlus || ''));
+                setPartitionSecondReelMinus(String(parsed.secondReelMinus || ''));
+                setPartitionSecondCutPlus(String(parsed.secondCutPlus || ''));
+                setPartitionSecondCutMinus(String(parsed.secondCutMinus || ''));
+              } else {
+                populateAdjust(item.reel_size_adjust, setPartitionFirstReelPlus, setPartitionFirstReelMinus);
+                populateAdjust(item.cut_size_adjust, setPartitionFirstCutPlus, setPartitionFirstCutMinus);
+                populateAdjust(item.reel_size_adjust, setPartitionSecondReelPlus, setPartitionSecondReelMinus);
+                populateAdjust(item.cut_size_adjust, setPartitionSecondCutPlus, setPartitionSecondCutMinus);
+              }
               const pOpt = item.p_option || parsed.pOption;
               if (pOpt) {
                 setPartitionPackingOption(pOpt);
@@ -1090,8 +1359,21 @@ export default function Production() {
               if (hasVal(item.gsm_packing)) setUTypeGsmPacking(String(item.gsm_packing));
               if (hasVal(item.bf)) setUTypeBf(String(item.bf));
               if (hasVal(item.quantity_of_data)) setUTypeQtyData(item.quantity_of_data);
-              populateAdjust(item.reel_size_adjust, setUTypeReelSizePlus, setUTypeReelSizeMinus);
-              populateAdjust(item.cut_size_adjust, setUTypeCutSizePlus, setUTypeCutSizeMinus);
+              if (hasVal(parsed.topReelPlus)) {
+                setUTypeTopReelPlus(String(parsed.topReelPlus || ''));
+                setUTypeTopReelMinus(String(parsed.topReelMinus || ''));
+                setUTypeTopCutPlus(String(parsed.topCutPlus || ''));
+                setUTypeTopCutMinus(String(parsed.topCutMinus || ''));
+                setUTypeBottomReelPlus(String(parsed.bottomReelPlus || ''));
+                setUTypeBottomReelMinus(String(parsed.bottomReelMinus || ''));
+                setUTypeBottomCutPlus(String(parsed.bottomCutPlus || ''));
+                setUTypeBottomCutMinus(String(parsed.bottomCutMinus || ''));
+              } else {
+                populateAdjust(item.reel_size_adjust, setUTypeTopReelPlus, setUTypeTopReelMinus);
+                populateAdjust(item.cut_size_adjust, setUTypeTopCutPlus, setUTypeTopCutMinus);
+                populateAdjust(item.reel_size_adjust, setUTypeBottomReelPlus, setUTypeBottomReelMinus);
+                populateAdjust(item.cut_size_adjust, setUTypeBottomCutPlus, setUTypeBottomCutMinus);
+              }
               const pOpt = item.p_option || parsed.pOption;
               if (pOpt) {
                 setUTypePackingOption(pOpt);
@@ -1425,20 +1707,28 @@ export default function Production() {
     const selectedOption = partitionGroupedSizes.find(s => s.id === partitionSizeId);
     if (!selectedOption) { setPartitionResults(null); return; }
     try {
-      const netReel = parseNumeric(partitionReelSizePlus, 0) - parseNumeric(partitionReelSizeMinus, 0);
-      const netCut = parseNumeric(partitionCutSizePlus, 0) - parseNumeric(partitionCutSizeMinus, 0);
+      const netFirstReel = parseNumeric(partitionFirstReelPlus, 0) - parseNumeric(partitionFirstReelMinus, 0);
+      const netFirstCut = parseNumeric(partitionFirstCutPlus, 0) - parseNumeric(partitionFirstCutMinus, 0);
+      const netSecondReel = parseNumeric(partitionSecondReelPlus, 0) - parseNumeric(partitionSecondReelMinus, 0);
+      const netSecondCut = parseNumeric(partitionSecondCutPlus, 0) - parseNumeric(partitionSecondCutMinus, 0);
+
       const reelMult = parseNumeric(partitionReelMultiplier, 1);
       const cutMult = parseNumeric(partitionCutMultiplier, 1);
-      const reelAdj = reelMult > 0 ? netReel / reelMult : netReel;
-      const cutAdj = cutMult > 0 ? netCut / cutMult : netCut;
+      const firstReelAdj = reelMult > 0 ? netFirstReel / reelMult : netFirstReel;
+      const firstCutAdj = cutMult > 0 ? netFirstCut / cutMult : netFirstCut;
+      const secondReelAdj = reelMult > 0 ? netSecondReel / reelMult : netSecondReel;
+      const secondCutAdj = cutMult > 0 ? netSecondCut / cutMult : netSecondCut;
+
       if (selectedOption.type === 'paired') {
         const computed = calculatePairedPartitionPricing({
           first: { L: convertToInches(selectedOption.first.length_inches, selectedOption.first.unit), W: convertToInches(selectedOption.first.width_inches, selectedOption.first.unit), slotCount: selectedOption.first.slot_count || 1 },
           second: { L: convertToInches(selectedOption.second.length_inches, selectedOption.second.unit), W: convertToInches(selectedOption.second.width_inches, selectedOption.second.unit), slotCount: selectedOption.second.slot_count || 1 },
           set: Number(partitionSet), qtyPads: Number(partitionQtyPads), plyType: Number(partitionPlyType),
           fluteExtraPercent: Number(partitionFluteExtraPercent), pricePerKg: 0, gstPercent: 0,
-          reelSizeAdjust: reelAdj,
-          cutSizeAdjust: cutAdj,
+          firstReelSizeAdjust: firstReelAdj,
+          firstCutSizeAdjust: firstCutAdj,
+          secondReelSizeAdjust: secondReelAdj,
+          secondCutSizeAdjust: secondCutAdj,
           gsmPaper: Number(partitionGsmPaper), gsmFlute: Number(partitionGsmFlute), gsmPacking: partitionHasPacking ? Number(partitionGsmPacking) : 0
         });
         setPartitionResults({ ...computed, isPaired: true, padPackingPaperCount: partitionHasPacking ? parseNumeric(partitionQtyPads, 0) * parseNumeric(partitionSet, 1) * parseNumeric(partitionQtyData, 1) * 1 : 0, padLinerCount: parseNumeric(partitionQtyPads, 0) * parseNumeric(partitionSet, 1) * parseNumeric(partitionQtyData, 1) * ((parseNumeric(partitionPlyType, 3) - 1) / 2) });
@@ -1449,14 +1739,14 @@ export default function Production() {
           qtyPads: Number(partitionQtyPads), plyType: Number(partitionPlyType),
           fluteExtraPercent: Number(partitionFluteExtraPercent), pricePerKg: 0,
           qtyData: Number(partitionQtyData), gstPercent: 0,
-          reelSizeAdjust: reelAdj,
-          cutSizeAdjust: cutAdj,
+          reelSizeAdjust: firstReelAdj,
+          cutSizeAdjust: firstCutAdj,
           gsmPaper: Number(partitionGsmPaper), gsmFlute: Number(partitionGsmFlute), gsmPacking: partitionHasPacking ? Number(partitionGsmPacking) : 0
         });
         setPartitionResults({ ...computed, isPaired: false, padPackingPaperCount: partitionHasPacking ? parseNumeric(partitionQtyPads, 0) * parseNumeric(partitionSet, 1) * parseNumeric(partitionQtyData, 1) * 1 : 0, padLinerCount: parseNumeric(partitionQtyPads, 0) * parseNumeric(partitionSet, 1) * parseNumeric(partitionQtyData, 1) * ((parseNumeric(partitionPlyType, 3) - 1) / 2), selectedSize });
       }
     } catch (e) { console.error('Partition calculation error:', e); setPartitionResults(null); }
-  }, [partitionSizeId, partitionGroupedSizes, partitionQtyPads, partitionPlyType, partitionFluteExtraPercent, partitionQtyData, partitionReelSizePlus, partitionReelSizeMinus, partitionCutSizePlus, partitionCutSizeMinus, partitionReelMultiplier, partitionCutMultiplier, partitionGsmPaper, partitionGsmFlute, partitionGsmPacking, partitionHasPacking, partitionSet]);
+  }, [partitionSizeId, partitionGroupedSizes, partitionQtyPads, partitionPlyType, partitionFluteExtraPercent, partitionQtyData, partitionFirstReelPlus, partitionFirstReelMinus, partitionFirstCutPlus, partitionFirstCutMinus, partitionSecondReelPlus, partitionSecondReelMinus, partitionSecondCutPlus, partitionSecondCutMinus, partitionReelMultiplier, partitionCutMultiplier, partitionGsmPaper, partitionGsmFlute, partitionGsmPacking, partitionHasPacking, partitionSet]);
 
   // Tray live calculation
   useEffect(() => {
@@ -1585,17 +1875,27 @@ export default function Production() {
     const selectedSize = uTypeSizes.find(s => s.id === uTypeSizeId);
     if (!selectedSize) return;
     try {
-      const netReel = parseNumeric(uTypeReelSizePlus, 0) - parseNumeric(uTypeReelSizeMinus, 0);
-      const netCut = parseNumeric(uTypeCutSizePlus, 0) - parseNumeric(uTypeCutSizeMinus, 0);
+      const netTopReel = parseNumeric(uTypeTopReelPlus, 0) - parseNumeric(uTypeTopReelMinus, 0);
+      const netTopCut = parseNumeric(uTypeTopCutPlus, 0) - parseNumeric(uTypeTopCutMinus, 0);
+      const netBottomReel = parseNumeric(uTypeBottomReelPlus, 0) - parseNumeric(uTypeBottomReelMinus, 0);
+      const netBottomCut = parseNumeric(uTypeBottomCutPlus, 0) - parseNumeric(uTypeBottomCutMinus, 0);
+
       const reelMult = parseNumeric(uTypeReelMultiplier, 1);
       const cutMult = parseNumeric(uTypeCutMultiplier, 1);
+      const topReelAdj = reelMult > 0 ? netTopReel / reelMult : netTopReel;
+      const topCutAdj = cutMult > 0 ? netTopCut / cutMult : netTopCut;
+      const bottomReelAdj = reelMult > 0 ? netBottomReel / reelMult : netBottomReel;
+      const bottomCutAdj = cutMult > 0 ? netBottomCut / cutMult : netBottomCut;
+
       const computed = calculateUniversalTypePricing({
         L: convertToInches(selectedSize.length_inches, selectedSize.unit), W: convertToInches(selectedSize.width_inches, selectedSize.unit), H: convertToInches(selectedSize.height_inches, selectedSize.unit),
         qtyBoxes: Number(uTypeQty), plyType: Number(uTypePlyType),
         fluteExtraPercent: Number(uTypeFluteExtraPercent), pricePerKg: 0,
         qtyData: Number(uTypeQtyData), gstPercent: 0,
-        reelSizeAdjust: reelMult > 0 ? netReel / reelMult : netReel,
-        cutSizeAdjust: cutMult > 0 ? netCut / cutMult : netCut,
+        topReelSizeAdjust: topReelAdj,
+        topCutSizeAdjust: topCutAdj,
+        bottomReelSizeAdjust: bottomReelAdj,
+        bottomCutSizeAdjust: bottomCutAdj,
         gsmPaper: Number(uTypeGsmPaper), gsmFlute: Number(uTypeGsmFlute), gsmPacking: uTypeHasPacking ? Number(uTypeGsmPacking) : 0
       });
       setUTypeResults({
@@ -1607,7 +1907,7 @@ export default function Production() {
         selectedSize
       });
     } catch (e) { console.error('Universal Type calculation error:', e); setUTypeResults(null); }
-  }, [uTypeSizeId, uTypeSizes, uTypeQty, uTypePlyType, uTypeFluteExtraPercent, uTypeQtyData, uTypeReelSizePlus, uTypeReelSizeMinus, uTypeCutSizePlus, uTypeCutSizeMinus, uTypeReelMultiplier, uTypeCutMultiplier, uTypeGsmPaper, uTypeGsmFlute, uTypeGsmPacking, uTypeHasPacking]);
+  }, [uTypeSizeId, uTypeSizes, uTypeQty, uTypePlyType, uTypeFluteExtraPercent, uTypeQtyData, uTypeTopReelPlus, uTypeTopReelMinus, uTypeTopCutPlus, uTypeTopCutMinus, uTypeBottomReelPlus, uTypeBottomReelMinus, uTypeBottomCutPlus, uTypeBottomCutMinus, uTypeReelMultiplier, uTypeCutMultiplier, uTypeGsmPaper, uTypeGsmFlute, uTypeGsmPacking, uTypeHasPacking]);
 
   // Fetch Full Closing Box sizes when fcBoxCompanyId changes
   useEffect(() => {
@@ -1874,7 +2174,15 @@ export default function Production() {
       isPartition: true,
       set: partitionSet,
       isPaired: partitionResults.isPaired,
-      dateOfFinish: partitionDateOfFinish || ''
+      dateOfFinish: partitionDateOfFinish || '',
+      firstReelPlus: partitionFirstReelPlus,
+      firstReelMinus: partitionFirstReelMinus,
+      firstCutPlus: partitionFirstCutPlus,
+      firstCutMinus: partitionFirstCutMinus,
+      secondReelPlus: partitionSecondReelPlus,
+      secondReelMinus: partitionSecondReelMinus,
+      secondCutPlus: partitionSecondCutPlus,
+      secondCutMinus: partitionSecondCutMinus
     };
 
     const partMult = parseNumeric(partitionQtyData, 1);
@@ -1913,8 +2221,8 @@ export default function Production() {
 
     const namePayload = JSON.stringify(metaObj);
 
-    const netReelPart = parseNumeric(partitionReelSizePlus, 0) - parseNumeric(partitionReelSizeMinus, 0);
-    const netCutPart = parseNumeric(partitionCutSizePlus, 0) - parseNumeric(partitionCutSizeMinus, 0);
+    const netFirstReelPart = parseNumeric(partitionFirstReelPlus, 0) - parseNumeric(partitionFirstReelMinus, 0);
+    const netFirstCutPart = parseNumeric(partitionFirstCutPlus, 0) - parseNumeric(partitionFirstCutMinus, 0);
 
     let payload;
     if (partitionResults.isPaired) {
@@ -1933,8 +2241,8 @@ export default function Production() {
         bf: Number(partitionBf),
         quantity_of_data: Number(partitionSet),
         gst_percent: 0,
-        reel_size_adjust: netReelPart,
-        cut_size_adjust: netCutPart,
+        reel_size_adjust: netFirstReelPart,
+        cut_size_adjust: netFirstCutPart,
         reel_size: partitionResults.first.reelSize * partitionReelMultiplier,
         cut_size: partitionResults.first.cutSize * partitionCutMultiplier,
         paper: partitionResults.paper,
@@ -1962,8 +2270,8 @@ export default function Production() {
         bf: Number(partitionBf),
         quantity_of_data: Number(partitionQtyData),
         gst_percent: 0,
-        reel_size_adjust: netReelPart,
-        cut_size_adjust: netCutPart,
+        reel_size_adjust: netFirstReelPart,
+        cut_size_adjust: netFirstCutPart,
         reel_size: partitionResults.reelSize * partitionReelMultiplier,
         cut_size: partitionResults.cutSize * partitionCutMultiplier,
         paper: partitionResults.paper,
@@ -2198,19 +2506,44 @@ export default function Production() {
     }
     if (checkDuplicateProductionFile(uTypeShowNewFileInput, uTypeNewFileName, setUTypeError)) return;
     setUTypeSaving(true); setUTypeError('');
-    const netReelUType = parseNumeric(uTypeReelSizePlus, 0) - parseNumeric(uTypeReelSizeMinus, 0);
-    const netCutUType = parseNumeric(uTypeCutSizePlus, 0) - parseNumeric(uTypeCutSizeMinus, 0);
-    const tReelCutUType = `${((uTypeResults.reelSize + 0.5) * uTypeReelMultiplier).toFixed(2)} × ${((uTypeResults.cutSize + 0.5) * uTypeCutMultiplier).toFixed(2)}`;
-    const bReelCutUType = `${(uTypeResults.reelSize * uTypeReelMultiplier).toFixed(2)} × ${(uTypeResults.cutSize * uTypeCutMultiplier).toFixed(2)}`;
+    const netTopReel = parseNumeric(uTypeTopReelPlus, 0) - parseNumeric(uTypeTopReelMinus, 0);
+    const netTopCut = parseNumeric(uTypeTopCutPlus, 0) - parseNumeric(uTypeTopCutMinus, 0);
+    const tReelCutUType = `${((uTypeResults.topReelSize + 0.5) * uTypeReelMultiplier).toFixed(2)} × ${((uTypeResults.topCutSize + 0.5) * uTypeCutMultiplier).toFixed(2)}`;
+    const bReelCutUType = `${(uTypeResults.bottomReelSize * uTypeReelMultiplier).toFixed(2)} × ${(uTypeResults.bottomCutSize * uTypeCutMultiplier).toFixed(2)}`;
     const totalMultUType = (parseNumeric(uTypeReelMultiplier, 1) * parseNumeric(uTypeCutMultiplier, 1)) || 1;
-    const namePayload = JSON.stringify({ pOption: uTypeHasPacking ? uTypePackingOption : '-', lOption: uTypeLinerOption, ref: uTypeCustomerName || 'Universal Type Production', reelMultiplier: uTypeReelMultiplier, cutMultiplier: uTypeCutMultiplier, sizeMultiplier: uTypeReelMultiplier * uTypeCutMultiplier, productionFile: finalFileName, isUniversalType: true, isPreDivided: true, topReelCut: tReelCutUType, bottomReelCut: bReelCutUType, dateOfFinish: uTypeDateOfFinish || '', topPackingPaperCount: uTypeResults ? Math.ceil(uTypeResults.topPackingPaperCount / totalMultUType) : 0, topLinerCount: uTypeResults ? Math.ceil(uTypeResults.topLinerCount / totalMultUType) : 0, bottomPackingPaperCount: uTypeResults ? Math.ceil(uTypeResults.bottomPackingPaperCount / totalMultUType) : 0, bottomLinerCount: uTypeResults ? Math.ceil(uTypeResults.bottomLinerCount / totalMultUType) : 0 });
+    const namePayload = JSON.stringify({
+      pOption: uTypeHasPacking ? uTypePackingOption : '-',
+      lOption: uTypeLinerOption,
+      ref: uTypeCustomerName || 'Universal Type Production',
+      reelMultiplier: uTypeReelMultiplier,
+      cutMultiplier: uTypeCutMultiplier,
+      sizeMultiplier: uTypeReelMultiplier * uTypeCutMultiplier,
+      productionFile: finalFileName,
+      isUniversalType: true,
+      isPreDivided: true,
+      topReelCut: tReelCutUType,
+      bottomReelCut: bReelCutUType,
+      dateOfFinish: uTypeDateOfFinish || '',
+      topPackingPaperCount: uTypeResults ? Math.ceil(uTypeResults.topPackingPaperCount / totalMultUType) : 0,
+      topLinerCount: uTypeResults ? Math.ceil(uTypeResults.topLinerCount / totalMultUType) : 0,
+      bottomPackingPaperCount: uTypeResults ? Math.ceil(uTypeResults.bottomPackingPaperCount / totalMultUType) : 0,
+      bottomLinerCount: uTypeResults ? Math.ceil(uTypeResults.bottomLinerCount / totalMultUType) : 0,
+      topReelPlus: uTypeTopReelPlus,
+      topReelMinus: uTypeTopReelMinus,
+      topCutPlus: uTypeTopCutPlus,
+      topCutMinus: uTypeTopCutMinus,
+      bottomReelPlus: uTypeBottomReelPlus,
+      bottomReelMinus: uTypeBottomReelMinus,
+      bottomCutPlus: uTypeBottomCutPlus,
+      bottomCutMinus: uTypeBottomCutMinus
+    });
     const payload = {
       company_id: uTypeCompanyId, size_id: uTypeSizeId, customer_name: namePayload,
       quantity_of_boxes: Number(uTypeQty), ply_type: Number(uTypePlyType), flute_extra_percent: Number(uTypeFluteExtraPercent),
       price_per_kg: 0, gsm: Number(uTypeGsmPaper), gsm_paper: Number(uTypeGsmPaper), gsm_flute: Number(uTypeGsmFlute), gsm_packing: uTypeHasPacking ? Number(uTypeGsmPacking) : 0,
       bf: Number(uTypeBf), quantity_of_data: Number(uTypeQtyData), gst_percent: 0,
-      reel_size_adjust: netReelUType, cut_size_adjust: netCutUType,
-      reel_size: uTypeResults.reelSize * uTypeReelMultiplier, cut_size: uTypeResults.cutSize * uTypeCutMultiplier,
+      reel_size_adjust: netTopReel, cut_size_adjust: netTopCut,
+      reel_size: uTypeResults.topReelSize * uTypeReelMultiplier, cut_size: uTypeResults.topCutSize * uTypeCutMultiplier,
       paper: uTypeResults.paper, flute: uTypeResults.flute, weight_per_unit: uTypeResults.weightPerUnit, box_weight: uTypeResults.universalTypeWeight,
       single_box_price: 0, total_cost: 0, gst_amount: 0, grand_total: 0
     };
@@ -2514,8 +2847,8 @@ export default function Production() {
             <h2 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-heading)', marginBottom: '4px' }}>Partition Specification Inputs</h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '24px' }}>Flat corrugated partition — Length × Width only (no height)</p>
             <ProductionFormFields companies={companies} prefix="Partitions" showH={false} calcType="partition"
-              state={{ companyId: partitionCompanyId, sizeId: partitionSizeId, sizes: partitionGroupedSizes, qty: partitionQtyPads, set: partitionSet, plyType: partitionPlyType, packingOption: partitionPackingOption, linerOption: partitionLinerOption, gsmPaper: partitionGsmPaper, bf: partitionBf, reelSizePlus: partitionReelSizePlus, reelSizeMinus: partitionReelSizeMinus, cutSizePlus: partitionCutSizePlus, cutSizeMinus: partitionCutSizeMinus, hasPacking: partitionHasPacking, qtyData: partitionQtyData }}
-              setState={{ setCompanyId: setPartitionCompanyId, setSizeId: setPartitionSizeId, setQty: setPartitionQtyPads, setSet: setPartitionSet, setPlyType: setPartitionPlyType, setPackingOption: setPartitionPackingOption, setLinerOption: setPartitionLinerOption, setGsmPaper: setPartitionGsmPaper, setBf: setPartitionBf, setReelSizePlus: setPartitionReelSizePlus, setReelSizeMinus: setPartitionReelSizeMinus, setCutSizePlus: setPartitionCutSizePlus, setCutSizeMinus: setPartitionCutSizeMinus, setHasPacking: setPartitionHasPacking, setQtyData: setPartitionQtyData }}
+              state={{ companyId: partitionCompanyId, sizeId: partitionSizeId, sizes: partitionGroupedSizes, qty: partitionQtyPads, set: partitionSet, plyType: partitionPlyType, packingOption: partitionPackingOption, linerOption: partitionLinerOption, gsmPaper: partitionGsmPaper, bf: partitionBf, firstReelSizePlus: partitionFirstReelPlus, firstReelSizeMinus: partitionFirstReelMinus, firstCutSizePlus: partitionFirstCutPlus, firstCutSizeMinus: partitionFirstCutMinus, secondReelSizePlus: partitionSecondReelPlus, secondReelSizeMinus: partitionSecondReelMinus, secondCutSizePlus: partitionSecondCutPlus, secondCutSizeMinus: partitionSecondCutMinus, hasPacking: partitionHasPacking, qtyData: partitionQtyData }}
+              setState={{ setCompanyId: setPartitionCompanyId, setSizeId: setPartitionSizeId, setQty: setPartitionQtyPads, setSet: setPartitionSet, setPlyType: setPartitionPlyType, setPackingOption: setPartitionPackingOption, setLinerOption: setPartitionLinerOption, setGsmPaper: setPartitionGsmPaper, setBf: setPartitionBf, setFirstReelSizePlus: setPartitionFirstReelPlus, setFirstReelSizeMinus: setPartitionFirstReelMinus, setFirstCutSizePlus: setPartitionFirstCutPlus, setFirstCutSizeMinus: setPartitionFirstCutMinus, setSecondReelSizePlus: setPartitionSecondReelPlus, setSecondReelSizeMinus: setPartitionSecondReelMinus, setSecondCutSizePlus: setPartitionSecondCutPlus, setSecondCutSizeMinus: setPartitionSecondCutMinus, setHasPacking: setPartitionHasPacking, setQtyData: setPartitionQtyData }}
             />
             <div className="form-group" style={{ marginTop: '16px' }}><label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><FolderOpen size={14} /> Production File</label>
               {!partitionShowNewFileInput ? (<div style={{ display: 'flex', gap: '8px' }}><select value={partitionProductionFile} onChange={e => setPartitionProductionFile(e.target.value)} className="form-control" style={{ flex: 1 }}><option value="">-- Select a File --</option>{existingFiles.map(f => <option key={f} value={f}>{f}</option>)}</select><button type="button" onClick={() => setPartitionShowNewFileInput(true)} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-accent)', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--color-accent)', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem', whiteSpace: 'nowrap' }}><FolderPlus size={14} /> New</button></div>) : (<div style={{ display: 'flex', gap: '8px' }}><input type="text" placeholder="Enter new file name..." value={partitionNewFileName} onChange={e => setPartitionNewFileName(e.target.value)} className="form-control" style={{ flex: 1 }} autoFocus /><button type="button" onClick={() => { setPartitionShowNewFileInput(false); setPartitionNewFileName(''); }} style={{ padding: '8px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem' }}>Cancel</button></div>)}
@@ -3283,10 +3616,14 @@ export default function Production() {
                 linerOption: uTypeLinerOption,
                 gsmPaper: uTypeGsmPaper,
                 bf: uTypeBf,
-                reelSizePlus: uTypeReelSizePlus,
-                reelSizeMinus: uTypeReelSizeMinus,
-                cutSizePlus: uTypeCutSizePlus,
-                cutSizeMinus: uTypeCutSizeMinus,
+                topReelSizePlus: uTypeTopReelPlus,
+                topReelSizeMinus: uTypeTopReelMinus,
+                topCutSizePlus: uTypeTopCutPlus,
+                topCutSizeMinus: uTypeTopCutMinus,
+                bottomReelSizePlus: uTypeBottomReelPlus,
+                bottomReelSizeMinus: uTypeBottomReelMinus,
+                bottomCutSizePlus: uTypeBottomCutPlus,
+                bottomCutSizeMinus: uTypeBottomCutMinus,
                 hasPacking: uTypeHasPacking,
                 qtyData: uTypeQtyData
               }}
@@ -3299,10 +3636,14 @@ export default function Production() {
                 setLinerOption: setUTypeLinerOption,
                 setGsmPaper: setUTypeGsmPaper,
                 setBf: setUTypeBf,
-                setReelSizePlus: setUTypeReelSizePlus,
-                setReelSizeMinus: setUTypeReelSizeMinus,
-                setCutSizePlus: setUTypeCutSizePlus,
-                setCutSizeMinus: setUTypeCutSizeMinus,
+                setTopReelSizePlus: setUTypeTopReelPlus,
+                setTopReelSizeMinus: setUTypeTopReelMinus,
+                setTopCutSizePlus: setUTypeTopCutPlus,
+                setTopCutSizeMinus: setUTypeTopCutMinus,
+                setBottomReelSizePlus: setUTypeBottomReelPlus,
+                setBottomReelSizeMinus: setUTypeBottomReelMinus,
+                setBottomCutSizePlus: setUTypeBottomCutPlus,
+                setBottomCutSizeMinus: setUTypeBottomCutMinus,
                 setHasPacking: setUTypeHasPacking,
                 setQtyData: setUTypeQtyData
               }}
@@ -3351,13 +3692,13 @@ export default function Production() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
                       <div style={{ background: 'rgba(40,140,200,0.08)', border: '1px solid hsl(200,70%,50%)', borderRadius: 'var(--radius-sm)', padding: '8px 10px' }}>
                         <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Top (with +0.5&quot; extra)</div>
-                        <div style={{ fontSize: '0.9rem', fontWeight: '700' }}>Reel: {(uTypeResults.reelSize + 0.5).toFixed(2)}&quot;</div>
-                        <div style={{ fontSize: '0.9rem', fontWeight: '700' }}>Cut: {(uTypeResults.cutSize + 0.5).toFixed(2)}&quot;</div>
+                        <div style={{ fontSize: '0.9rem', fontWeight: '700' }}>Reel: {uTypeResults.topReelSize.toFixed(2)}&quot;</div>
+                        <div style={{ fontSize: '0.9rem', fontWeight: '700' }}>Cut: {uTypeResults.topCutSize.toFixed(2)}&quot;</div>
                       </div>
                       <div style={{ background: 'rgba(40,140,200,0.08)', border: '1px solid hsl(200,70%,50%)', borderRadius: 'var(--radius-sm)', padding: '8px 10px' }}>
                         <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Bottom (raw size)</div>
-                        <div style={{ fontSize: '0.9rem', fontWeight: '700' }}>Reel: {uTypeResults.reelSize.toFixed(2)}&quot;</div>
-                        <div style={{ fontSize: '0.9rem', fontWeight: '700' }}>Cut: {uTypeResults.cutSize.toFixed(2)}&quot;</div>
+                        <div style={{ fontSize: '0.9rem', fontWeight: '700' }}>Reel: {uTypeResults.bottomReelSize.toFixed(2)}&quot;</div>
+                        <div style={{ fontSize: '0.9rem', fontWeight: '700' }}>Cut: {uTypeResults.bottomCutSize.toFixed(2)}&quot;</div>
                       </div>
                     </div>
 
@@ -3367,8 +3708,8 @@ export default function Production() {
                       <div><label style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Reel Multiply</label><input type="number" value={uTypeReelMultiplier} onChange={e => setUTypeReelMultiplier(Math.max(1, parseFloat(e.target.value) || 1))} className="form-control" min="1" step="1" style={{ padding: '8px 10px', fontSize: '0.9rem', fontWeight: '700' }} /></div>
                       <div><label style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Cut Multiply</label><input type="number" value={uTypeCutMultiplier} onChange={e => setUTypeCutMultiplier(Math.max(1, parseFloat(e.target.value) || 1))} className="form-control" min="1" step="1" style={{ padding: '8px 10px', fontSize: '0.9rem', fontWeight: '700' }} /></div>
                     </div>
-                    <div style={{ marginTop: '8px', padding: '10px 14px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Result (Top):</span><span style={{ fontSize: '1.1rem', fontWeight: '700' }}>{((uTypeResults.reelSize + 0.5) * uTypeReelMultiplier).toFixed(2)} × {((uTypeResults.cutSize + 0.5) * uTypeCutMultiplier).toFixed(2)} in</span></div>
-                    <div style={{ marginTop: '8px', padding: '10px 14px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Result (Bottom):</span><span style={{ fontSize: '1.1rem', fontWeight: '700' }}>{(uTypeResults.reelSize * uTypeReelMultiplier).toFixed(2)} × {(uTypeResults.cutSize * uTypeCutMultiplier).toFixed(2)} in</span></div>
+                    <div style={{ marginTop: '8px', padding: '10px 14px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Result (Top):</span><span style={{ fontSize: '1.1rem', fontWeight: '700' }}>{(uTypeResults.topReelSize * uTypeReelMultiplier).toFixed(2)} × {(uTypeResults.topCutSize * uTypeCutMultiplier).toFixed(2)} in</span></div>
+                    <div style={{ marginTop: '8px', padding: '10px 14px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Result (Bottom):</span><span style={{ fontSize: '1.1rem', fontWeight: '700' }}>{(uTypeResults.bottomReelSize * uTypeReelMultiplier).toFixed(2)} × {(uTypeResults.bottomCutSize * uTypeCutMultiplier).toFixed(2)} in</span></div>
                   </div>
                   <hr style={{ border: 'none', borderBottom: '1px solid var(--border-color)' }} />
                   <div>
