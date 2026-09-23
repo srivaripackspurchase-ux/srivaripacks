@@ -5,7 +5,7 @@ import { useNotification } from '../context/NotificationContext';
 import { ArrowLeft } from 'lucide-react';
 
 import LoginCard from '../components/auth/LoginCard';
-import bgFactoryImage from '../loginbackground.png';
+import bgFactoryImage from '../loginbackground.webp';
 
 import { executeUserLogin } from '../services/userAuth';
 import { executeAdminLogin } from '../services/adminAuth';

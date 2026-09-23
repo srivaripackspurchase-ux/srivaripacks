@@ -3,14 +3,14 @@ import { ArrowUpRight } from 'lucide-react';
 import { FALLBACK_PACKAGING_IMAGE } from '../../utils/publicCatalog';
 
 // Import exact user-provided industry PNG images from client/src/Industries
-import foodImg from '../../Industries/Food & Beverage Packaging.png';
-import pharmaImg from '../../Industries/Pharmaceuticals & Medical.png';
-import electricalImg from '../../Industries/Electrical Equipments.png';
-import electronicsImg from '../../Industries/Electronics & Hardware.png';
-import textileImg from '../../Industries/Textiles & Garment Exports.png';
-import agriImg from '../../Industries/Agriculture & Fresh Produce.png';
-import ecommerceImg from '../../Industries/E-Commerce & D2C Brands.png';
-import castingImg from '../../Industries/Casting Equipments.png';
+import foodImg from '../../Industries/Food & Beverage Packaging.webp';
+import pharmaImg from '../../Industries/Pharmaceuticals & Medical.webp';
+import electricalImg from '../../Industries/Electrical Equipments.webp';
+import electronicsImg from '../../Industries/Electronics & Hardware.webp';
+import textileImg from '../../Industries/Textiles & Garment Exports.webp';
+import agriImg from '../../Industries/Agriculture & Fresh Produce.webp';
+import ecommerceImg from '../../Industries/E-Commerce & D2C Brands.webp';
+import castingImg from '../../Industries/Casting Equipments.webp';
 
 export default function IndustriesSection() {
   const industries = [

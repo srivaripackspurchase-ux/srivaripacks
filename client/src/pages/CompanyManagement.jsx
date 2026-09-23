@@ -128,10 +128,9 @@ export default function CompanyManagement() {
   const filteredCompaniesForCategory = useMemo(() => {
     if (!selectedCalcCategory) return companies;
     return companies.filter(c =>
-      !c.available_types ||
-      c.available_types.length === 0 ||
-      c.available_types.includes('all') ||
-      c.available_types.includes(selectedCalcCategory)
+      c.available_types &&
+      c.available_types.length > 0 &&
+      (c.available_types.includes('all') || c.available_types.includes(selectedCalcCategory))
     );
   }, [companies, selectedCalcCategory]);
 
@@ -139,8 +138,11 @@ export default function CompanyManagement() {
   useEffect(() => {
     if (activeMode === 'edit') {
       if (filteredCompaniesForCategory.length > 0) {
-        const isStillValid = filteredCompaniesForCategory.some(c => String(c.id) === String(selectedCompanyId));
-        if (!isStillValid) {
+        const isCompanyInList = filteredCompaniesForCategory.some(c => String(c.id) === String(selectedCompanyId));
+        const currentCompObj = companies.find(c => String(c.id) === String(selectedCompanyId));
+        const hasCategorySizes = currentCompObj?.available_types?.includes(selectedCalcCategory);
+        
+        if (!selectedCompanyId || !isCompanyInList || !hasCategorySizes) {
           setSelectedCompanyId(filteredCompaniesForCategory[0].id);
         }
       } else {
@@ -148,7 +150,7 @@ export default function CompanyManagement() {
         setCompanySizes([]);
       }
     }
-  }, [selectedCalcCategory, companies, activeMode]);
+  }, [selectedCalcCategory, companies, activeMode, filteredCompaniesForCategory, selectedCompanyId]);
 
   // Fetch sizes when selectedCompanyId or selectedCalcCategory changes
   const fetchCompanySizes = async (compId, cat) => {
@@ -159,14 +161,17 @@ export default function CompanyManagement() {
     setLoadingSizes(true);
     try {
       const url = `/api/companies/${compId}/sizes?calc_type=${cat}`;
-      const res = await authenticatedFetch(url);
+      const res = await authenticatedFetch(url, { skipCache: true });
       if (res.ok) {
         const data = await res.json();
         setCompanySizes(data || []);
+      } else {
+        setCompanySizes([]);
       }
     } catch (err) {
       console.error('Error fetching company sizes:', err);
       showToast('Failed to load company sizes.', 'error');
+      setCompanySizes([]);
     } finally {
       setLoadingSizes(false);
     }

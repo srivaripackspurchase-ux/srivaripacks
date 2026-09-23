@@ -147,10 +147,13 @@ export const AuthProvider = ({ children }) => {
 
   const authenticatedFetch = async (url, options = {}) => {
     const method = (options.method || 'GET').toUpperCase();
+    const skipCache = options.skipCache || false;
 
     // If method is POST, PUT, DELETE -> clear short-lived GET response cache for freshness
-    if (method !== 'GET') {
-      responseCache.current.clear();
+    if (method !== 'GET' || skipCache) {
+      if (method !== 'GET') {
+        responseCache.current.clear();
+      }
     }
 
     const headers = {
@@ -166,8 +169,8 @@ export const AuthProvider = ({ children }) => {
     if (method === 'GET') {
       const cacheKey = `${token || ''}:${url}`;
 
-      // Check short-lived (3s) cache first
-      if (responseCache.current.has(cacheKey)) {
+      // Check short-lived (3s) cache first if not skipping cache
+      if (!skipCache && responseCache.current.has(cacheKey)) {
         const cached = responseCache.current.get(cacheKey);
         if (Date.now() - cached.timestamp < 3000) {
           return cached.response.clone();

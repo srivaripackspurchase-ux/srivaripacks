@@ -6,23 +6,23 @@
  * using exact local user-provided PNG assets.
  */
 
-import standardBoxImg from '../images/Standard Box.png';
-import padImg from '../images/Pad.png';
-import partitionImg from '../images/partition.png';
-import trayImg from '../images/Tray.png';
-import sleaveImg from '../images/sleave.png';
-import collerBoxImg from '../images/coller box.png';
-import topSideTrayBoxImg from '../images/Top Side Tray Box.png';
-import universalTypeImg from '../images/universal type.png';
-import fullClosingBoxImg from '../images/Full Closing Box.png';
+import standardBoxImg from '../images/Standard Box.webp';
+import padImg from '../images/Pad.webp';
+import partitionImg from '../images/partition.webp';
+import trayImg from '../images/Tray.webp';
+import sleaveImg from '../images/sleave.webp';
+import collerBoxImg from '../images/coller box.webp';
+import topSideTrayBoxImg from '../images/Top Side Tray Box.webp';
+import universalTypeImg from '../images/universal type.webp';
+import fullClosingBoxImg from '../images/Full Closing Box.webp';
 
 // Import exact user-provided manufacturing stage images from imagessss/
-import mfgStep1Img from '../imagessss/Customer Order Design.png';
-import mfgStep2Img from '../imagessss/Raw Material Preparation.png';
-import mfgStep3Img from '../imagessss/Corrugated Board Production.png';
-import mfgStep4Img from '../imagessss/Printing & Box Conversion.png';
-import mfgStep5Img from '../imagessss/Folding, Gluing & Quality Check.png';
-import mfgStep6Img from '../imagessss/Packing, Storage & Delivery.png';
+import mfgStep1Img from '../imagessss/Customer Order Design.webp';
+import mfgStep2Img from '../imagessss/Raw Material Preparation.webp';
+import mfgStep3Img from '../imagessss/Corrugated Board Production.webp';
+import mfgStep4Img from '../imagessss/Printing & Box Conversion.webp';
+import mfgStep5Img from '../imagessss/Folding, Gluing & Quality Check.webp';
+import mfgStep6Img from '../imagessss/Packing, Storage & Delivery.webp';
 
 export const FALLBACK_PACKAGING_IMAGE = standardBoxImg;
 
